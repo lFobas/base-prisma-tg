@@ -21,11 +21,11 @@ export default async function Home() {
   }));
 
   return (
-    <main className="">    
-      <>
-      <h1 className="text-2xl font-bold mb-4">Борги</h1>
+    <main className="min-h-screen flex">  
+      <div className="min-w-full max-w-screen-sm mx-auto px-4">
+        <h1 className="text-2xl font-bold mb-4">Борги</h1>
         <Table data={newData} adr={adreses} />
-      </>
+      </div>
     </main>
   );
 }
