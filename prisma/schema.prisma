@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model User {
+  id            String       @default(cuid()) @id
+  name          String?
+  telegramId    String?   @unique @map(name: "telegram_id")
+  email         String?   @unique
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+  @@map(name: "users")
+}
+
+
+model Client {
+  id            String     @default(cuid()) @id
+  name          String     @unique
+  bill          String?
+  adres         Adres?   @relation(fields: [adresId], references: [name])
+  street        String?
+  home          Int?
+  phone         BigInt?
+  taryfName     String? @map(name: "taryf_name")
+  taryf         Taryf?   @relation(fields: [taryfId], references: [id])
+  isUsilok      Boolean @default(false)
+  records       Record[]
+  isNoActive    Boolean @default(false)
+  description   String?
+  adresId       String?
+  taryfId       String?
+  @@map(name: "clients")
+}
+
+model Adres {
+  id        String     @default(cuid()) @id
+  name      String     @unique
+  streets   Street[]
+  streetId  String?
+  clients   Client[]
+}
+
+model Street {
+  id        String @default(cuid()) @id
+  name      String?
+  from      Adres? @relation(fields: [streetId], references: [id])
+  streetId  String?
+}
+
+model Taryf {
+  id        String     @default(cuid()) @id
+  name      String
+  summa     Int
+  clients   Client[]
+}
+
+model Record {
+  id        String     @default(cuid()) @id
+  date      DateTime?
+  summa     Decimal?
+  author    Client?   @relation(fields: [authorId], references: [name])
+  description String?
+  authorId  String?
+}
