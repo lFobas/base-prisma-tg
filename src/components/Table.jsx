@@ -45,7 +45,7 @@ const Table = ({ data, adr }) => {
           <thead className="bg-gray-50">
             <tr className=""> 
               <th className="text-left font-bold py-4">О\Р</th>
-              <th className="text-left font-bold py-4">Ім'я</th>
+              <th className="text-left font-bold py-4">Імя</th>
               <th className="text-left font-bold py-4">Адреса</th>
               <th className="text-left font-bold py-4">тел.</th>
               <th className="text-left font-bold py-4">Тариф</th>
