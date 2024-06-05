@@ -1,8 +1,10 @@
 import Table from "@/components/Table";
 import prisma from "@/lib/prisma";
+import Script from 'next/script'
 
 
 export default async function Home() {
+  <Script src="https://telegram.org/js/telegram-web-app.js" />
 
   const tg = window.Telegram.WebApp
 
