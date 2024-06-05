@@ -4,11 +4,7 @@ import Script from 'next/script'
 
 
 export default async function Home() {
-  <Script src="https://telegram.org/js/telegram-web-app.js" />
-
-  const tg = window.Telegram.WebApp
-
-  tg.expand()
+  
 
   const data = await prisma.client.findMany({include: {
     records: true,
@@ -26,6 +22,7 @@ export default async function Home() {
 
   return (
     <main className="">
+      <Script src="https://telegram.org/js/telegram-web-app.js" />
       
       <>
       <h1 className="text-2xl font-bold mb-4">Simple Table Example</h1>
