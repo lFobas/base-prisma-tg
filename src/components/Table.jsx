@@ -34,32 +34,28 @@ const Table = ({ data, adr }) => {
       }
 
     return (
-        <div className="mx-auto">
-                <select name="adres" defaultValue='' onChange={adresChange} className="custom-input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+        <div className="mx-0 p-1">
+                <select name="adres" defaultValue='' onChange={adresChange} className="border border-gray-300  text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
                   <option disabled value=''>Всі Села</option>
                   {adr.map((a)=>(<option key={a.name} value={a?.name}>{a?.name}</option>))}
                 </select>
-                <input type="text" defaultValue={''} onChange={searcChange} name="search" className="custom-input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Знайти" />
+                <input type="text" defaultValue={''} onChange={searcChange} name="search" className="border border-gray-300  text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Знайти" />
 
-        <table className="w-full custom-input-200 mx-3"> {/* Додайте клас Tailwind */}
-          <thead className="custom-input">
+        <table className="w-full mx-3">
+          <thead className="">
             <tr className=""> 
               <th className="text-left font-bold py-4">О\Р</th>
               <th className="text-left font-bold py-4">Імя</th>
               <th className="text-left font-bold py-4">Адреса</th>
-              <th className="text-left font-bold py-4">тел.</th>
-              <th className="text-left font-bold py-4">Тариф</th>
               <th className="text-left font-bold py-4">Борг</th>
             </tr>
           </thead>
           <tbody>
             {displayClient.length >0 ? displayClient?.map((item) => (
-              <tr key={item.id} className="border-b"> {/* Додайте клас Tailwind */}
+              <tr key={item.id} className="border-b">
                 <td className="text-left px-0 py-4">{item.bill}</td>
                 <td className="text-left px-0 py-4">{item.name}</td>
                 <td className="text-left px-0 py-4">{item.adres?.name} {item.street},{item.home}</td>
-                <td className="text-left px-0 py-4">{item.phone}</td>
-                <td className="text-left px-0 py-4">{item.taryfName}</td>
                 <td className="text-left px-0 py-4">{getTotal(item.records)}</td>
               </tr>
             )) : <h1>No Result</h1>}

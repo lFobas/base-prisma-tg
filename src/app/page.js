@@ -21,11 +21,9 @@ export default async function Home() {
   }));
 
   return (
-    <main className="">
-      <Script src="https://telegram.org/js/telegram-web-app.js" />
-      
+    <main className="">    
       <>
-      <h1 className="text-2xl font-bold mb-4">Simple Table Example</h1>
+      <h1 className="text-2xl font-bold mb-4">Борги</h1>
         <Table data={newData} adr={adreses} />
       </>
     </main>
