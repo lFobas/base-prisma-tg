@@ -1,6 +1,5 @@
 import Table from "@/components/Table";
 import prisma from "@/lib/prisma";
-import Script from 'next/script'
 
 
 export default async function Home() {
@@ -19,6 +18,27 @@ export default async function Home() {
       summa: Number(record.summa)
     }))
   }));
+  newData.sort((a, b) => {
+    const streetA = a.street?.toLowerCase(); 
+    const streetB = b.street?.toLowerCase();
+  
+    if (streetA < streetB) {
+      return -1; 
+    }
+    if (streetA > streetB) {
+      return 1; 
+    }
+    const homeA = parseInt(a?.home, 10);
+    const homeB = parseInt(b?.home, 10);
+  
+    if (homeA < homeB) {
+      return -1;
+    }
+    if (homeA > homeB) {
+      return 1;
+    }
+    return 0; 
+  })
 
   return (
     <main className="min-h-screen flex">  

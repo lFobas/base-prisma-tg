@@ -1,11 +1,15 @@
 'use client'
 
 import { useState } from "react";
+import Menu from "./Menu";
+import Link from "next/link";
 
 const Table = ({ data, adr }) => {
 
-  const [checked, setChecked] = useState(false);
-  const [displayClient, setDisplayClient] = useState(data.filter((c) => c?.isNoActive === false))
+  const [checkedActive, setCheckedActive] = useState(false);
+  const [checkedUsilok, setCheckedUsilok] = useState(false);
+  const [selectedAdres, setSelectedAdres] = useState(adr[0].name);
+  const [displayClient, setDisplayClient] = useState(data.filter((c) => c?.isNoActive === false && c?.isUsilok === false))
 
     const getTotal = (items = []) => {
         return items.reduce((acc, item) => {
@@ -13,47 +17,76 @@ const Table = ({ data, adr }) => {
         }, 0)
     }
 
-    const handleChange = () => {
-      setChecked(!checked);
-      const filte = data.filter((c) => c?.isNoActive === checked)
-      setDisplayClient(filte)
+    const handleChangeActive = () => {
+      const newChecked = !checkedActive;
+      setCheckedActive(newChecked);
+      const filte = data.filter((c) => c?.isNoActive === newChecked && c.adres?.name === selectedAdres && c?.isUsilok === checkedUsilok);
+      setDisplayClient(filte);
+    };
+    const handleChangeUsilik = () => {
+      const newChecked = !checkedUsilok;
+      setCheckedUsilok(newChecked);
+      const filte = data.filter((c) => c?.isUsilok === newChecked && c.adres?.name === selectedAdres && c.isNoActive === checkedActive);
+      setDisplayClient(filte);
     };
 
-    const adresChange = (e) =>{ 
-        const d = data.filter((c) => c.adres?.name === e.target.value)
-        if(data.length>0){
-          setDisplayClient(d)
-        }else{
-          setDisplayClient(data)
-        }        
+    const adresChange = (e) => {
+      const newAdres = e.target.value;
+      setSelectedAdres(newAdres);
+      const filteredData = data.filter((c) => c.adres?.name === newAdres && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok);
+      
+      if (data.length > 0) {
+        setDisplayClient(filteredData);
+      } else {
+        setDisplayClient(data);
       }
+    };
       const searcChange =(e)=>{
         if(e.target.value){
-          const filte = displayClient.filter((c) => c.name.toLowerCase().includes(e.target.value.toLowerCase()))
+          const filte = displayClient.filter((c) => c.name.toLowerCase().includes(e.target.value.toLowerCase()) && c.adres?.name === selectedAdres && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok)
           if(filte.length >0 ){
             setDisplayClient(filte)
           }else{
             setDisplayClient([])
           }
         }else{
-            setDisplayClient(data)
+            setDisplayClient(data.filter((c) => c?.isNoActive === checkedActive && c.adres?.name === selectedAdres))
         }
       }
 
     return (
       <div className="w-full max-w-screen-sm">
+        <label className="mx-2 text-gray-700">
+          Населений пункт:
+        </label>
         <select name="adres" defaultValue='' onChange={adresChange} className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
           <option disabled value=''>Всі Села</option>
           {adr.map((a)=>(<option key={a.name} value={a?.name}>{a?.name}</option>))}
         </select>
+        <label className="mx-2 text-gray-700">
+          Пошук по імені абонента:
+        </label>
         <input type="text" defaultValue={''} onChange={searcChange} name="search" className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Знайти по імені" />
-        <input
+        <div>
+          <input
           type="checkbox"
-          id="checkbox"
-          checked={checked}
-          onChange={handleChange}
+          checked={checkedActive}
+          onChange={handleChangeActive}
           className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
-        />
+          />
+        <label className="mx-2 text-gray-700">
+          Закриті
+        </label>
+          <input
+          type="checkbox"
+          checked={checkedUsilok}
+          onChange={handleChangeUsilik}
+          className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+          />
+        <label className="mx-2 text-gray-700">
+          Підсилювачі
+        </label>
+        </div>
         <table className="block w-full">
           <thead className="">
             <tr className=""> 
@@ -67,7 +100,7 @@ const Table = ({ data, adr }) => {
             {displayClient.length >0 ? displayClient?.map((item) => (
               <tr key={item.id} className="border-b">
                 <td className={`text-left px-0 py-4 ${!item.isNoActive ? "text-emerald-600" : 'text-red-600'}`}>{item.bill}</td>
-                <td className="text-left px-0 py-4">{item.name}</td>
+                <td className="text-left px-0 py-4"><Link href={`/client/${item.id}`}>{item.name}</Link>{item.name}</td>
                 <td className="text-left px-0 py-4">{item.adres?.name} {item.street},{item.home}</td>
                 <td className={`text-left px-0 py-4 ${getTotal(item.records) < -350 ? "text-red-600" : 'text-emerald-600'}`}>{getTotal(item.records)}</td>
               </tr>

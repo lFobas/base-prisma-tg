@@ -62,7 +62,7 @@ model Taryf {
 
 model Record {
   id        String     @default(cuid()) @id
-  date      DateTime?
+  date      DateTime
   summa     Decimal?
   author    Client?   @relation(fields: [authorId], references: [name])
   description String?
