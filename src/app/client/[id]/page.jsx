@@ -25,14 +25,14 @@ const ClientDetailPage = async (params) => {
 
   return (
     <div>
-        <Link className='text-2xl text-lime-500 border m-2 rounded-lg' href={'/'}>	⇐ Назад До Списку</Link>
+        <Link className='text-2xl text-lime-500 border-lime-500 p-1 border-2 m-2 rounded-md' href={'/'}>	⇐ Назад До Списку</Link>
         <h1 className='p-3 text-2xl'>{initData.name}</h1>
         {clientRecordsSorted.map((r, idx)=> {
             const sum = Number(r.summa)
             const formattedDate = new Date(r?.date).toLocaleDateString();
-            return<div key={idx} className={`flex m-2 p-2 border ${sum < 0 ? 'border-rose-800' : 'border-teal-700'}`}>
-            <p>{formattedDate}</p>
-            <p className=''>{sum}</p>
+            return<div key={idx} className={`flex m-2 p-2 border-4 rounded-md ${sum < 0 ? 'border-rose-800' : 'border-teal-700'}`}>
+            <p>{formattedDate}</p> |  |
+            <p className=''>{sum}</p>|  |
             <p>{r.description}</p>
         </div>})}
     </div>
