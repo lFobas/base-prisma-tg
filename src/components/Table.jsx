@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from "react";
-import Menu from "./Menu";
 import Link from "next/link";
 
 const Table = ({ data, adr }) => {
@@ -100,7 +99,7 @@ const Table = ({ data, adr }) => {
             {displayClient.length >0 ? displayClient?.map((item) => (
               <tr key={item.id} className="border-b">
                 <td className={`text-left px-0 py-4 ${!item.isNoActive ? "text-emerald-600" : 'text-red-600'}`}>{item.bill}</td>
-                <td className="text-left px-0 py-4"><Link href={`/client/${item.id}`}>{item.name}</Link>{item.name}</td>
+                <td className="text-left px-0 py-4 underline"><Link href={`/client/${item.id}`}>{item.name}</Link></td>
                 <td className="text-left px-0 py-4">{item.adres?.name} {item.street},{item.home}</td>
                 <td className={`text-left px-0 py-4 ${getTotal(item.records) < -350 ? "text-red-600" : 'text-emerald-600'}`}>{getTotal(item.records)}</td>
               </tr>
