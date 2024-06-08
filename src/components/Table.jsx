@@ -8,7 +8,7 @@ const Table = ({ data, adr }) => {
 
   const [checkedActive, setCheckedActive] = useState(false);
   const [checkedUsilok, setCheckedUsilok] = useState(false);
-  const [selectedAdres, setSelectedAdres] = useState(adr[0]?.name);
+  const [selectedAdres, setSelectedAdres] = useState(null);
   const [displayClient, setDisplayClient] = useState(data.filter((c) => c?.isNoActive === false && c?.isUsilok === false))
 
     const getTotal = (items = []) => {
@@ -44,8 +44,9 @@ const Table = ({ data, adr }) => {
       const newAdres = e.target.value;
       setSelectedAdres(newAdres);
       const filteredData = data.filter((c) => c.adres?.name === newAdres && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok);
-      
-      if (data.length > 0) {
+      if(e.target.value === '')
+        setDisplayClient(data.filter((c) => c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok))
+      if (filteredData.length > 0) {
         setDisplayClient(filteredData);
       } else {
         setDisplayClient(data);
@@ -65,7 +66,11 @@ const Table = ({ data, adr }) => {
             setDisplayClient(filte)
           }
         }else{
+          if(selectedAdres){
             setDisplayClient(data.filter((c) => c?.isNoActive === checkedActive && c.adres?.name === selectedAdres && c?.isUsilok === checkedUsilok))
+          }else{
+            setDisplayClient(data.filter((c) => c?.isNoActive === checkedActive && c?.isUsilok === checkedUsilok))
+          }
         }
       }
 
@@ -75,7 +80,7 @@ const Table = ({ data, adr }) => {
           Населений пункт:
         </label>
         <select name="adres" defaultValue='' onChange={adresChange} className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5" style={{ backgroundColor: 'var(--input-bg-color)', color: 'var(--input-text-color)' }}>
-          <option disabled value=''>Всі Села</option>
+          <option value=''>Всі Села</option>
           {adr.map((a)=>(<option key={a.name} value={a?.name}>{a?.name}</option>))}
         </select>
         <label className="mx-2 text-gray-700">
