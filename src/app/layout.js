@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Telegram from "@/lib/tg-provider";
+import { Analytics } from '@vercel/analytics/react';
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -17,6 +18,7 @@ export default function RootLayout({ children }) {
         <Telegram>
           {children}
         </Telegram>
+        <Analytics />
       </body>
     </html>
   );
