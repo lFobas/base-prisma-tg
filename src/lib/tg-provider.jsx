@@ -1,16 +1,15 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+
 
 export default function Telegram({ children }) {
   const [themeParams, setThemeParams] = useState({});
-  const router = useRouter()
 
   useEffect(() => {
     const script = document.createElement('script');
     script.src = "https://telegram.org/js/telegram-web-app.js";
     script.async = true;
-    router.refresh()
+    
     script.onload = () => {
       if (window.Telegram?.WebApp) {
         const theme = window.Telegram.WebApp.themeParams;

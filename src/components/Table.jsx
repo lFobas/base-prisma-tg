@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 
 const Table = ({ data, adr }) => {
 
+  const router = useRouter()
+  router.refresh()
   const [checkedActive, setCheckedActive] = useState(false);
   const [checkedUsilok, setCheckedUsilok] = useState(false);
   const [selectedAdres, setSelectedAdres] = useState(adr[0].name);
@@ -19,14 +22,24 @@ const Table = ({ data, adr }) => {
     const handleChangeActive = () => {
       const newChecked = !checkedActive;
       setCheckedActive(newChecked);
-      const filte = data.filter((c) => c?.isNoActive === newChecked && c.adres?.name === selectedAdres && c?.isUsilok === checkedUsilok);
-      setDisplayClient(filte);
+      if(selectedAdres){
+        const filte = data.filter((c) => c?.isNoActive === newChecked && c.adres?.name === selectedAdres && c?.isUsilok === checkedUsilok);
+        setDisplayClient(filte);
+      }else{
+        const filte = data.filter((c) => c?.isNoActive === newChecked && c?.isUsilok === checkedUsilok);
+        setDisplayClient(filte);
+      }
     };
     const handleChangeUsilik = () => {
       const newChecked = !checkedUsilok;
       setCheckedUsilok(newChecked);
-      const filte = data.filter((c) => c?.isUsilok === newChecked && c.adres?.name === selectedAdres && c.isNoActive === checkedActive);
-      setDisplayClient(filte);
+      if(selectedAdres){
+        const filte = data.filter((c) => c?.isUsilok === newChecked && c.adres?.name === selectedAdres && c.isNoActive === checkedActive);
+        setDisplayClient(filte);
+      }else{
+        const filte = data.filter((c) => c?.isUsilok === newChecked && c.isNoActive === checkedActive);
+        setDisplayClient(filte);        
+      }
     };
 
     const adresChange = (e) => {
@@ -42,14 +55,19 @@ const Table = ({ data, adr }) => {
     };
       const searcChange =(e)=>{
         if(e.target.value){
-          const filte = displayClient.filter((c) => c.name.toLowerCase().includes(e.target.value.toLowerCase()) && c.adres?.name === selectedAdres && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok)
-          if(filte.length >0 ){
-            setDisplayClient(filte)
+          if(selectedAdres){
+            const filte = data.filter((c) => c.name.toLowerCase().includes(e.target.value.toLowerCase()) && c.adres?.name === selectedAdres && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok)
+            if(filte.length >0 ){
+              setDisplayClient(filte)
+            }else{
+              setDisplayClient([])
+            }
           }else{
-            setDisplayClient([])
+            const filte = data.filter((c) => c.name.toLowerCase().includes(e.target.value.toLowerCase()) && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok)
+            setDisplayClient(filte)
           }
         }else{
-            setDisplayClient(data.filter((c) => c?.isNoActive === checkedActive && c.adres?.name === selectedAdres))
+            setDisplayClient(data.filter((c) => c?.isNoActive === checkedActive && c.adres?.name === selectedAdres && c?.isUsilok === checkedUsilok))
         }
       }
 
