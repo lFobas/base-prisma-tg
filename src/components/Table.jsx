@@ -74,7 +74,7 @@ const Table = ({ data, adr }) => {
         <label className="mx-2 text-gray-700">
           Населений пункт:
         </label>
-        <select name="adres" defaultValue='' onChange={adresChange} className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+        <select name="adres" defaultValue='' onChange={adresChange} className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5" style={{ backgroundColor: 'var(--input-bg-color)', color: 'var(--input-text-color)' }}>
           <option disabled value=''>Всі Села</option>
           {adr.map((a)=>(<option key={a.name} value={a?.name}>{a?.name}</option>))}
         </select>
