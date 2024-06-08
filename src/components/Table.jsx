@@ -81,7 +81,7 @@ const Table = ({ data, adr }) => {
         <label className="mx-2 text-gray-700">
           Пошук по імені абонента:
         </label>
-        <input type="text" defaultValue={''} onChange={searcChange} name="search" className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Знайти по імені" />
+        <input type="text" defaultValue={''} onChange={searcChange} name="search" className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" style={{ backgroundColor: 'var(--input-bg-color)', color: 'var(--input-text-color)' }} placeholder="Знайти по імені" />
         <div>
           <input
           type="checkbox"
