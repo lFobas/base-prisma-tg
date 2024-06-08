@@ -1,7 +1,7 @@
 import prisma from "./prisma";
 
 
-export async function getData() {
+export async function getClients() {
     console.log('triger user');
     const data = await prisma.client.findMany({include: {
         records: true,

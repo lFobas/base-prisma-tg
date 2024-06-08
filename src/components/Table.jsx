@@ -2,15 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from 'next/navigation';
+
 
 const Table = ({ data, adr }) => {
 
-  const router = useRouter()
-  router.refresh()
   const [checkedActive, setCheckedActive] = useState(false);
   const [checkedUsilok, setCheckedUsilok] = useState(false);
-  const [selectedAdres, setSelectedAdres] = useState(adr[0].name);
+  const [selectedAdres, setSelectedAdres] = useState(adr[0]?.name);
   const [displayClient, setDisplayClient] = useState(data.filter((c) => c?.isNoActive === false && c?.isUsilok === false))
 
     const getTotal = (items = []) => {
