@@ -22,6 +22,9 @@ export default function Telegram({ children }) {
         document.documentElement.style.setProperty('--button-text-color', theme.button_text_color || '#ffffff');
         document.documentElement.style.setProperty('--input-bg-color', theme.input_bg_color || '#ffffff');
         document.documentElement.style.setProperty('--input-text-color', theme.input_text_color || '#000000');
+        document.documentElement.style.setProperty('--checkbox-bg-color', theme.checkbox_bg_color || '#ffffff');
+        document.documentElement.style.setProperty('--checkbox-border-color', theme.checkbox_border_color || '#000000');
+        document.documentElement.style.setProperty('--checkbox-check-color', theme.checkbox_check_color || '#000000');
       }
     };
     document.body.appendChild(script);

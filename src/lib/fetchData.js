@@ -2,7 +2,6 @@ import prisma from "./prisma";
 
 
 export async function getClients() {
-    console.log('triger user');
     const data = await prisma.client.findMany({include: {
         records: true,
         adres: true,
@@ -42,7 +41,6 @@ export async function getClients() {
     }
   
 export async function getAdreses() {
-    console.log('triger adres');
     const adreses = await prisma.adres.findMany();
     return adreses;
   }

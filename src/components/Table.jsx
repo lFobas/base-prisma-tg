@@ -73,6 +73,27 @@ const Table = ({ data, adr }) => {
           }
         }
       }
+      const borgChange =(e)=>{
+        if(e.target.value){
+          if(selectedAdres){
+            const filte = data.filter((c) => getTotal(c.records) <= -e.target.value && c.adres?.name === selectedAdres && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok)
+            if(filte.length >0 ){
+              setDisplayClient(filte)
+            }else{
+              setDisplayClient([])
+            }
+          }else{
+            const filte = data.filter((c) => getTotal(c.records) <= e.target.value && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok)
+            setDisplayClient(filte)
+          }
+        }else{
+          if(selectedAdres){
+            setDisplayClient(data.filter((c) => c?.isNoActive === checkedActive && c.adres?.name === selectedAdres && c?.isUsilok === checkedUsilok))
+          }else{
+            setDisplayClient(data.filter((c) => c?.isNoActive === checkedActive && c?.isUsilok === checkedUsilok))
+          }
+        }
+      }
 
     return (
       <div className="w-full max-w-screen-sm">
@@ -87,38 +108,39 @@ const Table = ({ data, adr }) => {
           Пошук по імені абонента:
         </label>
         <input type="text" defaultValue={''} onChange={searcChange} name="search" className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" style={{ backgroundColor: 'var(--input-bg-color)', color: 'var(--input-text-color)' }} placeholder="Знайти по імені" />
-        <div>
+        <div className="flex justify-center text-center ">
           <input
           type="checkbox"
           checked={checkedActive}
           onChange={handleChangeActive}
-          className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+          className="form-checkbox  text-blue-600 transition duration-150 ease-in-out"
           />
-        <label className="mx-2 text-gray-700">
-          Закриті
-        </label>
+          <label className="mx-2 my-auto text-gray-700">
+            Закриті
+          </label>
           <input
-          type="checkbox"
-          checked={checkedUsilok}
-          onChange={handleChangeUsilik}
-          className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+            type="checkbox"
+            checked={checkedUsilok}
+            onChange={handleChangeUsilik}
+            className="flex justify-center form-checkbox text-blue-600 transition duration-150 ease-in-out"
           />
-        <label className="mx-2 text-gray-700">
-          Підсилювачі
-        </label>
+          <label className="flex mx-2 my-auto text-gray-700 justify-center">
+            Підсилювачі
+          </label>
+          <input type="text" defaultValue={''} onChange={borgChange} name="search" className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" style={{ backgroundColor: 'var(--input-bg-color)', color: 'var(--input-text-color)' }} placeholder="Борг Більше>" />
         </div>
         <table className="block w-full">
           <thead className="">
             <tr className=""> 
               <th className="text-left font-bold py-4">О\Р</th>
-              <th className="text-left font-bold py-4">Імя</th>
+              <th className="text-left font-bold py-4">Абонент</th>
               <th className="text-left font-bold py-4">Адреса</th>
-              <th className="text-left font-bold py-4">Борг</th>
+              <th className="text-left font-bold py-4">Баланс</th>
             </tr>
           </thead>
           <tbody>
             {displayClient.length >0 ? displayClient?.map((item) => (
-              <tr key={item.id} className="border-b">
+              <tr key={item.id} className={`border-b`}>
                 <td className={`text-left px-0 py-4 ${!item.isNoActive ? "text-emerald-600" : 'text-red-600'}`}>{item.bill}</td>
                 <td className="text-left px-0 py-4 underline"><Link href={`/client/${item.id}`}>{item.name}</Link></td>
                 <td className="text-left px-0 py-4">{item.adres?.name} {item.street},{item.home}</td>

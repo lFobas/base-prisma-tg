@@ -29,7 +29,11 @@ const ClientDetailPage = async (params) => {
         <h1 className='p-3 text-2xl'>{initData.name}</h1>
         {clientRecordsSorted.map((r, idx)=> {
             const sum = Number(r.summa)
-            const formattedDate = new Date(r?.date).toLocaleDateString();
+            const formattedDate = new Date(r?.date).toLocaleDateString('uk-UA', {
+                                                                                  day: '2-digit',
+                                                                                  month: '2-digit',
+                                                                                  year: 'numeric'
+                                                                                });
             return<div key={idx} className={`flex m-2 p-2 border-4 rounded-md ${sum < 0 ? 'border-rose-800' : 'border-teal-700'}`}>
             <p>{formattedDate}</p> |  |
             <p className=''>{sum}</p>|  |
