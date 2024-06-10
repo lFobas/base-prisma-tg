@@ -108,12 +108,13 @@ const Table = ({ data, adr }) => {
           Пошук по імені абонента:
         </label>
         <input type="text" defaultValue={''} onChange={searcChange} name="search" className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" style={{ backgroundColor: 'var(--input-bg-color)', color: 'var(--input-text-color)' }} placeholder="Знайти по імені" />
-        <div className="flex justify-center text-center ">
+        <div className="flex justify-between text-center ">
+          <div className="flex w-2/3">
           <input
           type="checkbox"
           checked={checkedActive}
           onChange={handleChangeActive}
-          className="form-checkbox  text-blue-600 transition duration-150 ease-in-out"
+          className="my-auto w-5 h-5 p-2.5 text-blue-600 transition duration-150 ease-in-out"
           />
           <label className="mx-2 my-auto text-gray-700">
             Закриті
@@ -122,12 +123,13 @@ const Table = ({ data, adr }) => {
             type="checkbox"
             checked={checkedUsilok}
             onChange={handleChangeUsilik}
-            className="flex justify-center form-checkbox text-blue-600 transition duration-150 ease-in-out"
-          />
+            className="my-auto w-5 h-5 p-2.5 text-blue-600 transition duration-150 ease-in-out"
+            />
           <label className="flex mx-2 my-auto text-gray-700 justify-center">
             Підсилювачі
           </label>
-          <input type="text" defaultValue={''} onChange={borgChange} name="search" className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" style={{ backgroundColor: 'var(--input-bg-color)', color: 'var(--input-text-color)' }} placeholder="Борг Більше>" />
+          </div>
+          <input type="text" defaultValue={''} onChange={borgChange} name="search" className="border border-gray-300  text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/3 p-2.5" style={{ backgroundColor: 'var(--input-bg-color)', color: 'var(--input-text-color)' }} placeholder="Борг Більше" />
         </div>
         <table className="block w-full">
           <thead className="">
