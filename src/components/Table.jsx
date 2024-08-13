@@ -1,100 +1,127 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { getClients, getClientsByAdres } from "@/lib/actions";
+import Spiner from "./Spiner/Spiner";
 
 
-const Table = ({ data, adr }) => {
+const Table = ({ adr }) => {
 
   const [checkedActive, setCheckedActive] = useState(false);
   const [checkedUsilok, setCheckedUsilok] = useState(false);
   const [selectedAdres, setSelectedAdres] = useState(null);
-  const [displayClient, setDisplayClient] = useState(data.filter((c) => c?.isNoActive === false && c?.isUsilok === false))
+  const [displayClient, setDisplayClient] = useState([])
+  const [dataCl, setDataCl] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [baner, setBaner] = useState('')
 
-    const getTotal = (items = []) => {
-        return items.reduce((acc, item) => {
-            return acc += parseFloat(item.summa)
-        }, 0)
+  
+  useEffect(()=>{
+    setIsLoading(true)
+    setBaner('Виберіть Село')
+    setIsLoading(false)
+  },[])
+
+
+  const getTotal = (items = []) => {
+      return items.reduce((acc, item) => {
+          return acc += parseFloat(item.summa)
+      }, 0)
+  }
+
+  const handleChangeActive = () => {
+    const newChecked = !checkedActive;
+    setCheckedActive(newChecked);
+    if(selectedAdres){
+      const filte = data.filter((c) => c?.isNoActive === newChecked && c.adres?.name === selectedAdres && c?.isUsilok === checkedUsilok);
+      setDisplayClient(filte);
+    }else{
+      const filte = data.filter((c) => c?.isNoActive === newChecked && c?.isUsilok === checkedUsilok);
+        setDisplayClient(filte);
     }
+  };
+  const handleChangeUsilik = () => {
+    const newChecked = !checkedUsilok;
+    setCheckedUsilok(newChecked);
+    if(selectedAdres){
+      const filte = data.filter((c) => c?.isUsilok === newChecked && c.adres?.name === selectedAdres && c.isNoActive === checkedActive);
+      setDisplayClient(filte);
+    }else{
+      const filte = data.filter((c) => c?.isUsilok === newChecked && c.isNoActive === checkedActive);
+      setDisplayClient(filte);        
+    }
+  };
 
-    const handleChangeActive = () => {
-      const newChecked = !checkedActive;
-      setCheckedActive(newChecked);
-      if(selectedAdres){
-        const filte = data.filter((c) => c?.isNoActive === newChecked && c.adres?.name === selectedAdres && c?.isUsilok === checkedUsilok);
-        setDisplayClient(filte);
-      }else{
-        const filte = data.filter((c) => c?.isNoActive === newChecked && c?.isUsilok === checkedUsilok);
-        setDisplayClient(filte);
-      }
-    };
-    const handleChangeUsilik = () => {
-      const newChecked = !checkedUsilok;
-      setCheckedUsilok(newChecked);
-      if(selectedAdres){
-        const filte = data.filter((c) => c?.isUsilok === newChecked && c.adres?.name === selectedAdres && c.isNoActive === checkedActive);
-        setDisplayClient(filte);
-      }else{
-        const filte = data.filter((c) => c?.isUsilok === newChecked && c.isNoActive === checkedActive);
-        setDisplayClient(filte);        
-      }
-    };
-
-    const adresChange = (e) => {
-      const newAdres = e.target.value;
-      setSelectedAdres(newAdres);
+  const adresChange = async(e) => {
+    setIsLoading(true)
+    setBaner(null)
+    const newAdres = e.target.value;
+    setSelectedAdres(newAdres);
+    if(newAdres === ''){
+      setIsLoading(true)
+      const newData = await getClients()
+      setDisplayClient(newData.filter((c) => c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok))
+      setDataCl(newData.filter((c) => c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok))
+      setIsLoading(false)
+    }else{
+      const data = await getClientsByAdres(newAdres)
       const filteredData = data.filter((c) => c.adres?.name === newAdres && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok);
-      if(e.target.value === '')
-        setDisplayClient(data.filter((c) => c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok))
-      if (filteredData.length > 0) {
+      setDataCl(filteredData)
+      if(filteredData.length > 0){
         setDisplayClient(filteredData);
-      } else {
+      }else{
         setDisplayClient(data);
       }
-    };
-      const searcChange =(e)=>{
-        if(e.target.value){
-          if(selectedAdres){
-            const filte = data.filter((c) => c.name.toLowerCase().includes(e.target.value.toLowerCase()) && c.adres?.name === selectedAdres && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok)
-            if(filte.length >0 ){
-              setDisplayClient(filte)
-            }else{
-              setDisplayClient([])
-            }
-          }else{
-            const filte = data.filter((c) => c.name.toLowerCase().includes(e.target.value.toLowerCase()) && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok)
-            setDisplayClient(filte)
-          }
-        }else{
-          if(selectedAdres){
-            setDisplayClient(data.filter((c) => c?.isNoActive === checkedActive && c.adres?.name === selectedAdres && c?.isUsilok === checkedUsilok))
-          }else{
-            setDisplayClient(data.filter((c) => c?.isNoActive === checkedActive && c?.isUsilok === checkedUsilok))
-          }
-        }
-      }
-      const borgChange =(e)=>{
-        if(e.target.value){
-          if(selectedAdres){
-            const filte = data.filter((c) => getTotal(c.records) <= -e.target.value && c.adres?.name === selectedAdres && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok)
-            if(filte.length >0 ){
-              setDisplayClient(filte)
-            }else{
-              setDisplayClient([])
-            }
-          }else{
-            const filte = data.filter((c) => getTotal(c.records) <= e.target.value && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok)
-            setDisplayClient(filte)
-          }
-        }else{
-          if(selectedAdres){
-            setDisplayClient(data.filter((c) => c?.isNoActive === checkedActive && c.adres?.name === selectedAdres && c?.isUsilok === checkedUsilok))
-          }else{
-            setDisplayClient(data.filter((c) => c?.isNoActive === checkedActive && c?.isUsilok === checkedUsilok))
-          }
-        }
-      }
+    }
+    setIsLoading(false)
+  };
 
+  const searcChange = (e)=>{  
+    setBaner(null)
+    if(e.target.value){
+      if(selectedAdres){
+        const filte = dataCl.filter((c) => c.name.toLowerCase().includes(e.target.value.toLowerCase()) && c.adres?.name === selectedAdres && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok)
+        if(filte.length >0 ){
+          setDisplayClient(filte)
+        }else{
+          setDisplayClient([])
+          setBaner("Нема збігів")
+        }
+      }else{
+        const filte = dataCl.filter((c) => c.name.toLowerCase().includes(e.target.value.toLowerCase()) && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok)
+        setDisplayClient(filte)
+      }
+    }else{
+      if(selectedAdres){
+        setDisplayClient(dataCl.filter((c) => c?.isNoActive === checkedActive && c.adres?.name === selectedAdres && c?.isUsilok === checkedUsilok))
+      }else{
+        setDisplayClient(dataCl.filter((c) => c?.isNoActive === checkedActive && c?.isUsilok === checkedUsilok))
+      }
+    }
+  }
+
+  const borgChange =(e)=>{
+    if(e.target.value){
+      if(selectedAdres){
+        const filte = dataCl.filter((c) => getTotal(c.records) <= -e.target.value && c.adres?.name === selectedAdres && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok)
+        if(filte.length >0 ){
+          setDisplayClient(filte)
+        }else{
+          setDisplayClient([])
+        }
+      }else{
+        const filte = dataCl.filter((c) => getTotal(c.records) <= e.target.value && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok)
+        setDisplayClient(filte)
+      }
+    }else{
+      if(selectedAdres){
+        setDisplayClient(dataCl.filter((c) => c?.isNoActive === checkedActive && c.adres?.name === selectedAdres && c?.isUsilok === checkedUsilok))
+      }else{
+        setDisplayClient(dataCl.filter((c) => c?.isNoActive === checkedActive && c?.isUsilok === checkedUsilok))
+      }
+    }
+  }
     return (
       <div className="w-full max-w-screen-sm">
         <label className="mx-2 text-gray-700">
@@ -131,6 +158,7 @@ const Table = ({ data, adr }) => {
           </div>
           <input type="text" defaultValue={''} onChange={borgChange} name="search" className="border border-gray-300  text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/3 p-2.5" style={{ backgroundColor: 'var(--input-bg-color)', color: 'var(--input-text-color)' }} placeholder="Борг Більше" />
         </div>
+        {!isLoading ? 
         <table className="block w-full">
           <thead className="">
             <tr className=""> 
@@ -145,14 +173,15 @@ const Table = ({ data, adr }) => {
               <tr key={item.id} className={`border-b`}>
                 <td className={`text-left px-0 py-4 ${!item.isNoActive ? "text-emerald-600" : 'text-red-600'}`}>{item.bill}</td>
                 <td className="text-left px-0 py-4 underline"><Link href={`/client/${item.id}`}>{item.name}</Link></td>
-                <td className="text-left px-0 py-4">{item.adres?.name} {item.street},{item.home}</td>
+                <td className="text-left px-0 py-4">{item.adres?.name} - {item.street}, {item.home}</td>
                 <td className={`text-left px-0 py-4 ${getTotal(item.records) < -350 ? "text-red-600" : 'text-emerald-600'}`}>{getTotal(item.records)}</td>
               </tr>
-            )) : <h1>No Result</h1>}
+            )) : <tr ><td>
+              <h1>{baner}</h1>
+              </td></tr>}
           </tbody>
-        </table>
+        </table> : <Spiner/>}
       </div>
-      );
-    };
-    
+      )};
+        
     export default Table;
