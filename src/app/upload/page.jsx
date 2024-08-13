@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import * as XLSX from 'xlsx';
 
-const page = () => {
+const UploadPage = () => {
   const [data, setData] = useState([]);
 
   const handleFileUpload = (event) => {
@@ -84,4 +84,4 @@ const page = () => {
       </div>
   );
 };
-export default page
+export default UploadPage
