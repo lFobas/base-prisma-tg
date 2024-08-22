@@ -33,24 +33,10 @@ const Table = ({ adr }) => {
   const handleChangeActive = () => {
     const newChecked = !checkedActive;
     setCheckedActive(newChecked);
-    if(selectedAdres){
-      const filte = data.filter((c) => c?.isNoActive === newChecked && c.adres?.name === selectedAdres && c?.isUsilok === checkedUsilok);
-      setDisplayClient(filte);
-    }else{
-      const filte = data.filter((c) => c?.isNoActive === newChecked && c?.isUsilok === checkedUsilok);
-        setDisplayClient(filte);
-    }
   };
   const handleChangeUsilik = () => {
     const newChecked = !checkedUsilok;
     setCheckedUsilok(newChecked);
-    if(selectedAdres){
-      const filte = data.filter((c) => c?.isUsilok === newChecked && c.adres?.name === selectedAdres && c.isNoActive === checkedActive);
-      setDisplayClient(filte);
-    }else{
-      const filte = data.filter((c) => c?.isUsilok === newChecked && c.isNoActive === checkedActive);
-      setDisplayClient(filte);        
-    }
   };
 
   const adresChange = async(e) => {
@@ -61,12 +47,12 @@ const Table = ({ adr }) => {
     if(newAdres === ''){
       setIsLoading(true)
       const newData = await getClients()
-      setDisplayClient(newData.filter((c) => c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok))
-      setDataCl(newData.filter((c) => c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok))
+      setDisplayClient(newData)
+      setDataCl(newData)
       setIsLoading(false)
     }else{
       const data = await getClientsByAdres(newAdres)
-      const filteredData = data.filter((c) => c.adres?.name === newAdres && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok);
+      const filteredData = data.filter((c) => c.adres?.name === newAdres);
       setDataCl(filteredData)
       if(filteredData.length > 0){
         setDisplayClient(filteredData);
@@ -81,7 +67,7 @@ const Table = ({ adr }) => {
     setBaner(null)
     if(e.target.value){
       if(selectedAdres){
-        const filte = dataCl.filter((c) => c.name.toLowerCase().includes(e.target.value.toLowerCase()) && c.adres?.name === selectedAdres && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok)
+        const filte = dataCl.filter((c) => c.name.toLowerCase().includes(e.target.value.toLowerCase()))
         if(filte.length >0 ){
           setDisplayClient(filte)
         }else{
@@ -89,36 +75,30 @@ const Table = ({ adr }) => {
           setBaner("Нема збігів")
         }
       }else{
-        const filte = dataCl.filter((c) => c.name.toLowerCase().includes(e.target.value.toLowerCase()) && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok)
+        const filte = dataCl.filter((c) => c.name.toLowerCase().includes(e.target.value.toLowerCase()) )
         setDisplayClient(filte)
       }
     }else{
-      if(selectedAdres){
-        setDisplayClient(dataCl.filter((c) => c?.isNoActive === checkedActive && c.adres?.name === selectedAdres && c?.isUsilok === checkedUsilok))
-      }else{
-        setDisplayClient(dataCl.filter((c) => c?.isNoActive === checkedActive && c?.isUsilok === checkedUsilok))
-      }
+        setDisplayClient(dataCl)
     }
   }
 
   const borgChange =(e)=>{
     if(e.target.value){
       if(selectedAdres){
-        const filte = dataCl.filter((c) => getTotal(c.records) <= -e.target.value && c.adres?.name === selectedAdres && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok)
+        const filte = dataCl.filter((c) => getTotal(c.records) <= -e.target.value && c.adres?.name === selectedAdres )
         if(filte.length >0 ){
           setDisplayClient(filte)
         }else{
           setDisplayClient([])
         }
       }else{
-        const filte = dataCl.filter((c) => getTotal(c.records) <= e.target.value && c.isNoActive === checkedActive && c?.isUsilok === checkedUsilok)
+        const filte = dataCl.filter((c) => getTotal(c.records) <= e.target.value )
         setDisplayClient(filte)
       }
     }else{
       if(selectedAdres){
-        setDisplayClient(dataCl.filter((c) => c?.isNoActive === checkedActive && c.adres?.name === selectedAdres && c?.isUsilok === checkedUsilok))
-      }else{
-        setDisplayClient(dataCl.filter((c) => c?.isNoActive === checkedActive && c?.isUsilok === checkedUsilok))
+        setDisplayClient(dataCl)
       }
     }
   }
@@ -169,16 +149,27 @@ const Table = ({ adr }) => {
             </tr>
           </thead>
           <tbody>
-            {displayClient.length >0 ? displayClient?.map((item) => (
-              <tr key={item.id} className={`border-b`}>
-                <td className={`text-left px-0 py-4 ${!item.isNoActive ? "text-emerald-600" : 'text-red-600'}`}>{item.bill}</td>
-                <td className="text-left px-0 py-4 underline"><Link href={`/client/${item.id}`}>{item.name}</Link></td>
-                <td className="text-left px-0 py-4">{item.adres?.name} - {item.street}, {item.home}</td>
-                <td className={`text-left px-0 py-4 ${getTotal(item.records) < -350 ? "text-red-600" : 'text-emerald-600'}`}>{getTotal(item.records)}</td>
-              </tr>
-            )) : <tr ><td>
-              <h1>{baner}</h1>
-              </td></tr>}
+          {displayClient.length > 0 ? displayClient
+  .filter(item => item.isNoActive === checkedActive && item.isUsilok === checkedUsilok) // Фільтрація по checkedActive і checkedUsilok
+  .map((item) => (
+    <tr key={item.id} className={`border-b`}>
+      <td className={`text-left px-0 py-4 ${!item.isNoActive ? "text-emerald-600" : 'text-red-600'}`}>{item.bill}</td>
+      <td className="text-left px-0 py-4 underline">
+        <Link href={`/client/${item.id}`}>{item.name}</Link>
+      </td>
+      <td className="text-left px-0 py-4">{item.adres?.name} - {item.street}, {item.home}</td>
+      <td className={`text-left px-0 py-4 ${getTotal(item.records) < -350 ? "text-red-600" : 'text-emerald-600'}`}>
+        {getTotal(item.records)}
+      </td>
+    </tr>
+  )) : (
+    <tr>
+      <td>
+        <h1>{baner}</h1>
+      </td>
+    </tr>
+)}
+
           </tbody>
         </table> : <Spiner/>}
       </div>

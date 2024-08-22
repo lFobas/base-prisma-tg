@@ -77,7 +77,7 @@ export async function getAdreses() {
     return adreses;
   }
 
-  export const getClientsByAdres = async (adres)=> {
+export const getClientsByAdres = async (adres)=> {
     const data = await prisma.client.findMany({
         where: {
           adresId: adres,
@@ -115,4 +115,42 @@ export async function getAdreses() {
       }
     )  
     return newData
+}
+
+export const createRecords = async (data)=> {
+    console.log(data);
+    try {
+      const res = await prisma.record.createMany({data})
+      return res
+    } catch (error) {
+      return error
+    }
+    
+}
+
+export const getRecordsByDate = async (selectedDate) =>{
+  const records = await prisma.record.findMany({
+    where: {
+      date: new Date(selectedDate)  // Перетворення selectedDate на об'єкт Date
+    }
+  });
+  records.forEach(record => {
+    record.summa = Number(record.summa);
+  });
+  return records;
+}
+
+export const editeRecordById = async (id, body) =>{
+  try {
+    const res = await prisma.record.update({
+        where: {
+            id: id
+        },
+        data: body
+    })
+    return res
+} catch (error) {
+    console.error(error);
+    return error
+}
 }

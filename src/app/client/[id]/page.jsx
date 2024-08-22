@@ -1,8 +1,10 @@
 'use client'
+import RecordCard from '@/components/Card/RecordCard'
 import Spiner from '@/components/Spiner/Spiner'
 import { editeClientById, getClientById } from '@/lib/actions'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 
 const ClientDetailPage = (params) => {
 
@@ -25,10 +27,10 @@ const ClientDetailPage = (params) => {
       const recordB = b.date;
     
       if (recordA < recordB) {
-        return -1; 
+        return 1; 
       }
       if (recordA > recordB) {
-        return 1; 
+        return -1; 
       }}))
   }
 
@@ -37,13 +39,18 @@ const ClientDetailPage = (params) => {
     setIsLoading(true)
     await editeClientById(id, data)
     await initData()
+    toast.info("Змінено!", { 
+      autoClose: 1000,
+      theme: "dark",
+      draggable: true,
+   });
     setIsLoading(false)
   }
 
         
 
   return (
-    <div>
+    <div className=''>
         <Link className='text-2xl text-lime-500 border-lime-500 p-1 border-2 m-2 rounded-md' href={'/'}>	⇐ Назад До Списку</Link>
         <h1 className='p-3 text-2xl'>{client?.name}</h1>
         {client ? 
@@ -62,11 +69,8 @@ const ClientDetailPage = (params) => {
                                                                                   month: '2-digit',
                                                                                   year: 'numeric'
                                                                                 });
-            return<div key={idx} className={`flex m-2 p-2 border-4 rounded-md ${sum < 0 ? 'border-rose-800' : 'border-teal-700'}`}>
-            <p>{formattedDate}</p> |  |
-            <p className=''>{sum}</p>|  |
-            <p>{r.description}</p>
-        </div>})}
+        return <RecordCard key={idx} record={r} changeable={false} />
+        })}
     </div>
   )
 }

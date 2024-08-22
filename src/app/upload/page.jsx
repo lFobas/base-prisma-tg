@@ -1,4 +1,5 @@
 'use client'
+import { createRecords } from '@/lib/actions';
 import React, { useState } from 'react'
 import * as XLSX from 'xlsx';
 
@@ -41,7 +42,7 @@ const UploadPage = () => {
       });
       
       setData(dataObjects);
-      console.log(dataObjects);
+      
     }
  
     reader.readAsBinaryString(file);
@@ -52,12 +53,17 @@ const UploadPage = () => {
 
   };
 
+  const handleUpload = async ()=>{
+    const res = await createRecords(data)
+    console.log(res);
+  }
+
   return (
     <div className=''>
       <input type="file" accept=".xls,.xlsx" onChange={handleFileUpload} className='m-1' />
       {data.length > 0 ?
         <>
-        <button className='w-24 h-12 bg-sky-800 rounded-md text-white'>Загрузити</button>
+        <button className='w-24 h-12 bg-sky-800 rounded-md text-white' onClick={handleUpload}>Загрузити</button>
         <button className='w-12 h-12 m-1 bg-red-800 rounded-md' onClick={((e)=> setData([]))}>x</button>
         </>
          : null
