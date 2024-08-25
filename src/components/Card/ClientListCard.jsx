@@ -10,7 +10,7 @@ const ClientListCard = ({client, summa}) => {
       <div className="text-gray-800 flex-grow mx-1">
        {client.name} - {client.street}, {client.home}
       </div>
-      <div className={`font-semibold text-${summa < -400 ? 'red' : 'emerald'}-600 flex-grow-0 text-right`}>
+      <div className={`font-semibold ${summa < -400 ? 'text-red-600' : 'text-emerald-600'} flex-grow-0 text-right`}>
         {summa}
       </div>
     </Link>
