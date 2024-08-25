@@ -3,16 +3,33 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getClients, getClientsByAdres } from "@/lib/actions";
+import { useFilterStore } from "@/lib/store";
 import Spiner from "./Spiner/Spiner";
 
 
 const Table = ({ adr }) => {
 
-  const [checkedActive, setCheckedActive] = useState(false);
-  const [checkedUsilok, setCheckedUsilok] = useState(false);
-  const [selectedAdres, setSelectedAdres] = useState(null);
-  const [displayClient, setDisplayClient] = useState([])
-  const [dataCl, setDataCl] = useState([])
+  const [
+    checkedActive, 
+    checkedUsilok, 
+    selectedAdres, 
+    dataCl, 
+    changeActive, 
+    changeUsilok, 
+    selectAdres, 
+    selectDataCl
+  ] = useFilterStore((state) => [
+    state.checkedActive, 
+    state.checkedUsilok,
+    state.selectedAdres,
+    state.dataCl,
+    state.changeActive,
+    state.changeUsilok,
+    state.selectAdres,
+    state.selectDataCl
+  ]);
+
+  const [displayClient, setDisplayClient] = useState(dataCl)
   const [isLoading, setIsLoading] = useState(false)
   const [baner, setBaner] = useState('')
 
@@ -30,30 +47,21 @@ const Table = ({ adr }) => {
       }, 0)
   }
 
-  const handleChangeActive = () => {
-    const newChecked = !checkedActive;
-    setCheckedActive(newChecked);
-  };
-  const handleChangeUsilik = () => {
-    const newChecked = !checkedUsilok;
-    setCheckedUsilok(newChecked);
-  };
-
   const adresChange = async(e) => {
     setIsLoading(true)
     setBaner(null)
     const newAdres = e.target.value;
-    setSelectedAdres(newAdres);
+    selectAdres(newAdres);
     if(newAdres === ''){
       setIsLoading(true)
       const newData = await getClients()
       setDisplayClient(newData)
-      setDataCl(newData)
+      selectDataCl(newData)
       setIsLoading(false)
     }else{
       const data = await getClientsByAdres(newAdres)
       const filteredData = data.filter((c) => c.adres?.name === newAdres);
-      setDataCl(filteredData)
+      selectDataCl(filteredData)
       if(filteredData.length > 0){
         setDisplayClient(filteredData);
       }else{
@@ -107,7 +115,7 @@ const Table = ({ adr }) => {
         <label className="mx-2 text-gray-700">
           Населений пункт:
         </label>
-        <select name="adres" defaultValue='' onChange={adresChange} className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5" style={{ backgroundColor: 'var(--input-bg-color)', color: 'var(--input-text-color)' }}>
+        <select name="adres" defaultValue={selectedAdres} onChange={adresChange} className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5" style={{ backgroundColor: 'var(--input-bg-color)', color: 'var(--input-text-color)' }}>
           <option value=''>Всі Села</option>
           {adr.map((a)=>(<option key={a.name} value={a?.name}>{a?.name}</option>))}
         </select>
@@ -120,7 +128,7 @@ const Table = ({ adr }) => {
           <input
           type="checkbox"
           checked={checkedActive}
-          onChange={handleChangeActive}
+          onChange={()=> changeActive(!checkedActive)}
           className="my-auto w-5 h-5 p-2.5 text-blue-600 transition duration-150 ease-in-out"
           />
           <label className="mx-2 my-auto text-gray-700">
@@ -129,7 +137,7 @@ const Table = ({ adr }) => {
           <input
             type="checkbox"
             checked={checkedUsilok}
-            onChange={handleChangeUsilik}
+            onChange={()=>changeUsilok(!changeUsilok)}
             className="my-auto w-5 h-5 p-2.5 text-blue-600 transition duration-150 ease-in-out"
             />
           <label className="flex mx-2 my-auto text-gray-700 justify-center">
@@ -149,27 +157,24 @@ const Table = ({ adr }) => {
             </tr>
           </thead>
           <tbody>
-          {displayClient.length > 0 ? displayClient
-  .filter(item => item.isNoActive === checkedActive && item.isUsilok === checkedUsilok) // Фільтрація по checkedActive і checkedUsilok
-  .map((item) => (
-    <tr key={item.id} className={`border-b`}>
-      <td className={`text-left px-0 py-4 ${!item.isNoActive ? "text-emerald-600" : 'text-red-600'}`}>{item.bill}</td>
-      <td className="text-left px-0 py-4 underline">
-        <Link href={`/client/${item.id}`}>{item.name}</Link>
-      </td>
-      <td className="text-left px-0 py-4">{item.adres?.name} - {item.street}, {item.home}</td>
-      <td className={`text-left px-0 py-4 ${getTotal(item.records) < -350 ? "text-red-600" : 'text-emerald-600'}`}>
-        {getTotal(item.records)}
-      </td>
-    </tr>
-  )) : (
-    <tr>
-      <td>
-        <h1>{baner}</h1>
-      </td>
-    </tr>
-)}
-
+          {displayClient.length > 0 ? displayClient.filter(item => item.isNoActive === checkedActive && item.isUsilok === checkedUsilok).map((item) => (
+            <tr key={item.id} className={`border-b`}>
+              <td className={`text-left px-0 py-4 ${!item.isNoActive ? "text-emerald-600" : 'text-red-600'}`}>{item.bill}</td>
+              <td className="text-left px-0 py-4 underline">
+                <Link href={`/client/${item.id}`}>{item.name}</Link>
+              </td>
+              <td className="text-left px-0 py-4">{item.adres?.name} - {item.street}, {item.home}</td>
+              <td className={`text-left px-0 py-4 ${getTotal(item.records) < -350 ? "text-red-600" : 'text-emerald-600'}`}>
+                {getTotal(item.records)}
+              </td>
+            </tr>
+            )) : (
+            <tr>
+              <td>
+                <h1>{baner}</h1>
+              </td>
+            </tr>
+          )}
           </tbody>
         </table> : <Spiner/>}
       </div>

@@ -55,11 +55,11 @@ const ClientDetailPage = (params) => {
         <h1 className='p-3 text-2xl'>{client?.name}</h1>
         {client ? 
           <button
-            className={`p-2 m-2 flex justify-center items-center rounded-md w-24 h-10 ${isLoading ? 'bg-yellow-300' : !client?.isNoActive ? "bg-red-600" : "bg-green-600" }`} 
+            className={`p-2 m-2 flex justify-center items-center rounded-md  h-10 ${isLoading ? 'bg-yellow-300' : !client?.isNoActive ? "bg-red-600" : "bg-green-600" }`} 
             onClick={handleCloseOpen}
           >
           {isLoading ? <Spiner /> : 
-            !client?.isNoActive ? 'Закрити' : "Поновити"}
+            !client?.isNoActive ? 'Відключити Клієнта' : "Поновити Клієнта"}
           </button> : <></>
         }
         {records?.map((r, idx)=> {

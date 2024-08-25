@@ -78,7 +78,7 @@ const RecordCard = ({record, changeable}) => {
             defaultValue={editedRecord.description}
             placeholder="Опис"
             className="border border-gray-300 rounded-md p-1 flex-1 min-w-[150px] h-16 resize-none mb-1 sm:mb-0"
-        />: editedRecord.description = 'Нарахування'}
+        />: <h1>Нарахування</h1>}
     </div>
 </div>
 )
