@@ -1,10 +1,10 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { getClients, getClientsByAdres } from "@/lib/actions";
 import { useFilterStore } from "@/lib/store";
 import Spiner from "./Spiner/Spiner";
+import ClientListCard from "./Card/ClientListCard";
 
 
 const Table = ({ adr }) => {
@@ -94,15 +94,15 @@ const Table = ({ adr }) => {
   const borgChange =(e)=>{
     if(e.target.value){
       if(selectedAdres){
-        const filte = dataCl.filter((c) => getTotal(c.records) <= -e.target.value && c.adres?.name === selectedAdres )
-        if(filte.length >0 ){
-          setDisplayClient(filte)
+        const filteredData = dataCl.filter((c) => getTotal(c.records) <= -e.target.value)
+        if(filteredData.length >0 ){
+          setDisplayClient(filteredData)
         }else{
           setDisplayClient([])
         }
       }else{
-        const filte = dataCl.filter((c) => getTotal(c.records) <= e.target.value )
-        setDisplayClient(filte)
+        const filteredData = dataCl.filter((c) => getTotal(c.records) <= e.target.value)
+        setDisplayClient(filteredData)
       }
     }else{
       if(selectedAdres){
@@ -146,38 +146,19 @@ const Table = ({ adr }) => {
           </div>
           <input type="text" defaultValue={''} onChange={borgChange} name="search" className="border border-gray-300  text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/3 p-2.5" style={{ backgroundColor: 'var(--input-bg-color)', color: 'var(--input-text-color)' }} placeholder="Борг Більше" />
         </div>
-        {!isLoading ? 
-        <table className="block w-full">
-          <thead className="">
-            <tr className=""> 
-              <th className="text-left font-bold py-4">О\Р</th>
-              <th className="text-left font-bold py-4">Абонент</th>
-              <th className="text-left font-bold py-4">Адреса</th>
-              <th className="text-left font-bold py-4">Баланс</th>
-            </tr>
-          </thead>
-          <tbody>
-          {displayClient.length > 0 ? displayClient.filter(item => item.isNoActive === checkedActive && item.isUsilok === checkedUsilok).map((item) => (
-            <tr key={item.id} className={`border-b`}>
-              <td className={`text-left px-0 py-4 ${!item.isNoActive ? "text-emerald-600" : 'text-red-600'}`}>{item.bill}</td>
-              <td className="text-left px-0 py-4 underline">
-                <Link href={`/client/${item.id}`}>{item.name}</Link>
-              </td>
-              <td className="text-left px-0 py-4">{item.adres?.name} - {item.street}, {item.home}</td>
-              <td className={`text-left px-0 py-4 ${getTotal(item.records) < -350 ? "text-red-600" : 'text-emerald-600'}`}>
-                {getTotal(item.records)}
-              </td>
-            </tr>
-            )) : (
-            <tr>
-              <td>
+        {!isLoading ? (
+              displayClient.length > 0 ? (
+                displayClient
+                  .filter(item => item.isNoActive === checkedActive && item.isUsilok === checkedUsilok)
+                  .map(item => <ClientListCard key={item.id} client={item} summa={getTotal(item.records)} />)
+              ) : (
                 <h1>{baner}</h1>
-              </td>
-            </tr>
-          )}
-          </tbody>
-        </table> : <Spiner/>}
+              )
+            ) : (
+              <Spiner />
+            )}
+            <div className="m-9"><br/></div>
       </div>
-      )};
+      );}
         
-    export default Table;
+    export default Table

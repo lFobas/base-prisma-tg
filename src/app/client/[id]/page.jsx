@@ -50,8 +50,8 @@ const ClientDetailPage = (params) => {
         
 
   return (
-    <div className=''>
-        <Link className='text-2xl text-lime-500 border-lime-500 p-1 border-2 m-2 rounded-md' href={'/'}>	⇐ Назад До Списку</Link>
+    <div className='py-4'>
+        <Link className='text-2xl text-lime-500 border-lime-500 p-2 border-2 m-2 rounded-md' href={'/'}>	⇐ Назад До Списку</Link>
         <h1 className='p-3 text-2xl'>{client?.name}</h1>
         {client ? 
           <button
