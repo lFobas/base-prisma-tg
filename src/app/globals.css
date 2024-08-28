@@ -34,7 +34,7 @@
   }
   
   button:hover {
-    background-color: darken(var(--tg-theme-button-color), 10%);
+    filter: brightness(0.9);
   }
   
   input, textarea, select {
