@@ -33,7 +33,7 @@ const ScrollToTopButton = () => {
         onClick={scrollToTop}
         className="button fixed bottom-4 right-4 rounded-full shadow-md "
       >
-        ↑Up
+        ↑
       </button>
     )
   );
