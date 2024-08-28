@@ -111,18 +111,18 @@ const Table = ({ adr }) => {
     }
   }
     return (
-      <div className="w-full max-w-screen-sm">
+      <div className="w-full">
         <label className="mx-2 text-gray-700">
           Населений пункт:
         </label>
-        <select name="adres" defaultValue={selectedAdres} onChange={adresChange} className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5" style={{ backgroundColor: 'var(--input-bg-color)', color: 'var(--input-text-color)' }}>
+        <select name="adres" defaultValue={selectedAdres} onChange={adresChange} className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
           <option value=''>Всі Села</option>
           {adr.map((a)=>(<option key={a.name} value={a?.name}>{a?.name}</option>))}
         </select>
         <label className="mx-2 text-gray-700">
           Пошук по імені абонента:
         </label>
-        <input type="text" defaultValue={''} onChange={searcChange} name="search" className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" style={{ backgroundColor: 'var(--input-bg-color)', color: 'var(--input-text-color)' }} placeholder="Знайти по імені" />
+        <input type="text" defaultValue={''} onChange={searcChange} name="search" className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Знайти по імені" />
         <div className="flex justify-between text-center ">
           <div className="flex w-2/3">
           <input
