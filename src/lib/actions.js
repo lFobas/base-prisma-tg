@@ -162,7 +162,7 @@ export const tgUsersAnalitik = async (visitor) =>{
       update: {}, 
       create: {
         name: visitor.first_name,
-        telegramId: visitor.telegramId,
+        telegramId: visitor.id,
       },
     });
     return user
