@@ -160,11 +160,11 @@ export const tgUsersAnalitik = async (visitor) => {
     const visitorData = typeof visitor === 'string' ? JSON.parse(visitor) : visitor;
 
     const user = await prisma.user.upsert({
-      where: { telegramId: visitorData.id },
+      where: { telegramId: visitorData.id.toString() },
       update: {},
       create: {
         name: visitorData.first_name,
-        telegramId: visitorData.id,
+        telegramId: visitorData.id.toString(),
       },
     });
 
