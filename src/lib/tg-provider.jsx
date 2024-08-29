@@ -9,7 +9,8 @@ export default function Telegram({ children }) {
   const [user, initUser] = useUserStore((state)=> [state.user, state.initUser])
 
   const addUser = async(data)=>{
-    const res = await tgUsersAnalitik(data)
+    const visitor = JSON.stringify(data);
+    const res = await tgUsersAnalitik(visitor)
     console.log(res);  
   }
 

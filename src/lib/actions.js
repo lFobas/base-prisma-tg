@@ -155,18 +155,23 @@ export const editeRecordById = async (id, body) =>{
 }
 }
 
-export const tgUsersAnalitik = async (visitor) =>{
+export const tgUsersAnalitik = async (visitor) => {
   try {
+    const visitorData = typeof visitor === 'string' ? JSON.parse(visitor) : visitor;
+
     const user = await prisma.user.upsert({
-      where: { telegramId: visitor.id },
-      update: {}, 
+      where: { telegramId: visitorData.id },
+      update: {},
       create: {
-        name: visitor.first_name,
-        telegramId: visitor.id,
+        name: visitorData.first_name,
+        telegramId: visitorData.id,
       },
     });
-    return user
+
+    // Перетворення user на plain object
+    return JSON.parse(JSON.stringify(user));
   } catch (error) {
-    return error
+    console.error("Error in tgUsersAnalitik:", error);
+    return { error: "Something went wrong" };
   }
-}
+};
