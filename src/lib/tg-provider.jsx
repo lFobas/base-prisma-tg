@@ -8,6 +8,11 @@ export default function Telegram({ children }) {
   const [themeParams, setThemeParams] = useState({});
   const [user, initUser] = useUserStore((state)=> [state.user, state.initUser])
 
+  const addUser = async(data)=>{
+    const res = await tgUsersAnalitik(data)
+    console.log(res);  
+  }
+
   useEffect(() => {
     const script = document.createElement('script');
     script.src = "https://telegram.org/js/telegram-web-app.js";
@@ -17,7 +22,7 @@ export default function Telegram({ children }) {
         const theme = window.Telegram.WebApp.themeParams;
         const tgUser = window.Telegram.WebApp.initDataUnsafe.user
         if (tgUser) {
-          tgUsersAnalitik(tgUser)
+          addUser(tgUser)
         }
         initUser(tgUser)
         setThemeParams(theme);
@@ -32,7 +37,7 @@ export default function Telegram({ children }) {
   }, []);
 
   return (
-    <div style={{ backgroundColor: 'var(--bg-color)', color: 'var(--text-color)' }}>
+    <div>
         {children}
     </div>
   );
