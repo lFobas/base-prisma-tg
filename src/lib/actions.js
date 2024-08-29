@@ -154,3 +154,19 @@ export const editeRecordById = async (id, body) =>{
     return error
 }
 }
+
+export const tgUsersAnalitik = async (visitor) =>{
+  try {
+    const user = await prisma.user.upsert({
+      where: { telegramId: visitor.id },
+      update: {}, 
+      create: {
+        name: visitor.first_name,
+        telegramId: visitor.telegramId,
+      },
+    });
+    return user
+  } catch (error) {
+    return error
+  }
+}

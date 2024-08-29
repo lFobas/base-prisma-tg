@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react';
 import { useUserStore } from './store';
+import { tgUsersAnalitik } from './actions';
 
 
 export default function Telegram({ children }) {
@@ -15,10 +16,12 @@ export default function Telegram({ children }) {
       if (window.Telegram?.WebApp) {
         const theme = window.Telegram.WebApp.themeParams;
         const tgUser = window.Telegram.WebApp.initDataUnsafe.user
+        if (tgUser) {
+          tgUsersAnalitik(tgUser)
+        }
         initUser(tgUser)
         setThemeParams(theme);
         window.Telegram.WebApp.expand()
-
       }
     };
     document.body.appendChild(script);
