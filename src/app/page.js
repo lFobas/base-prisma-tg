@@ -13,7 +13,6 @@ export default async function Home() {
   return (
     <main className="min-h-screen flex">  
      <div className="w-full md:w-9/12 lg:w-9/12 mx-auto px-4">
-        <h1 className="text-2xl font-bold"><Link href={"/"}>Борги</Link></h1>
         <Table
          adr={adreses} 
          />

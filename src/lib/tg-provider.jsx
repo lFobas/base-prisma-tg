@@ -14,7 +14,8 @@ export default function Telegram({ children }) {
     script.onload = () => {
       if (window.Telegram?.WebApp) {
         const theme = window.Telegram.WebApp.themeParams;
-        initUser(window.Telegram.WebApp.initDataUnsafe.user)
+        const tgUser = window.Telegram.WebApp.initDataUnsafe.user
+        initUser(tgUser)
         setThemeParams(theme);
         window.Telegram.WebApp.expand()
 
