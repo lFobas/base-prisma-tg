@@ -13,3 +13,9 @@ export const useFilterStore = create((set, get) => ({
 
   selectDataCl: (data) => set({ dataCl: data }),
 }));
+
+export const useUserStore = create((set, get)=>({
+  user: null,
+
+  initUser: (data) => set({user: data})
+}))

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getClients, getClientsByAdres } from "@/lib/actions";
-import { useFilterStore } from "@/lib/store";
+import { useFilterStore, useUserStore } from "@/lib/store";
 import Spiner from "./Spiner/Spiner";
 import ClientListCard from "./Card/ClientListCard";
 
@@ -28,6 +28,8 @@ const Table = ({ adr }) => {
     state.selectAdres,
     state.selectDataCl
   ]);
+  const [user, initUser] = useUserStore((state)=> [state.user, state.initUser])
+
 
   const [displayClient, setDisplayClient] = useState(dataCl)
   const [isLoading, setIsLoading] = useState(false)
@@ -112,14 +114,15 @@ const Table = ({ adr }) => {
   }
     return (
       <div className="w-full">
-        <label className="mx-2 text-gray-700">
+        <h2 className="text-end">{user.first_name}{user.id}</h2>
+        <label className="mx-2 secondary-text">
           Населений пункт:
         </label>
         <select name="adres" defaultValue={selectedAdres} onChange={adresChange} className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
           <option value=''>Всі Села</option>
           {adr.map((a)=>(<option key={a.name} value={a?.name}>{a?.name}</option>))}
         </select>
-        <label className="mx-2 text-gray-700">
+        <label className="mx-2 secondary-text">
           Пошук по імені абонента:
         </label>
         <input type="text" defaultValue={''} onChange={searcChange} name="search" className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Знайти по імені" />
@@ -131,7 +134,7 @@ const Table = ({ adr }) => {
           onChange={()=> changeActive(!checkedActive)}
           className="my-auto w-5 h-5 p-2.5 text-blue-600 transition duration-150 ease-in-out"
           />
-          <label className="mx-2 my-auto text-gray-700">
+          <label className="mx-2 my-auto secondary-text">
             Закриті
           </label>
           <input
@@ -140,7 +143,7 @@ const Table = ({ adr }) => {
             onChange={()=>changeUsilok(!changeUsilok)}
             className="my-auto w-5 h-5 p-2.5 text-blue-600 transition duration-150 ease-in-out"
             />
-          <label className="flex mx-2 my-auto text-gray-700 justify-center">
+          <label className="flex mx-2 my-auto secondary-text justify-center">
             Підсилювачі
           </label>
           </div>
