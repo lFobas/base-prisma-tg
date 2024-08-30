@@ -1,4 +1,4 @@
-import { Telegraf } from 'telegraf';
+import { Telegraf, Markup } from 'telegraf';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 
@@ -9,7 +9,7 @@ bot.start((ctx) => {
 
 // Обробка команди /help
 bot.help((ctx) => {
-  ctx.reply('Доступні команди:\n/start - Почати роботу\n/help - Отримати допомогу\n/getinfo - Отримати інформацію\n/app - Відкрити Список Боргів');
+  ctx.reply('Доступні команди:\n/start - Почати роботу\n/help - Отримати допомогу\n/getinfo - Отримати інформацію\n/app - Відкрити Таблиці Боржників');
 });
 
 // Обробка команди /getinfo
@@ -22,8 +22,10 @@ bot.command('getinfo', (ctx) => {
 // Обробка команди /app
 bot.command('app', (ctx) => {
   const miniAppUrl = 'https://t.me/beregtvinfobot/baza';
-  const message = `Натисніть на посилання, щоб відкрити Mini App: <a href="${miniAppUrl}">Відкрити Mini App</a>`;
-  ctx.replyWithHTML(message);
+  const markup = Markup.inlineKeyboard([
+    Markup.button.url('Відкрити Борги', miniAppUrl),
+  ]);
+  ctx.reply('Натисніть на кнопку, щоб відкрити Mini App:', markup);
 });
 
 // Обробка будь-якого текстового повідомлення
