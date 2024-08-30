@@ -9,7 +9,7 @@ bot.start((ctx) => {
 
 // Обробка команди /help
 bot.help((ctx) => {
-  ctx.reply('Доступні команди:\n/start - Почати роботу\n/help - Отримати допомогу\n/getinfo - Отримати інформацію');
+  ctx.reply('Доступні команди:\n/start - Почати роботу\n/help - Отримати допомогу\n/getinfo - Отримати інформацію\n/app - Відкрити Список Боргів');
 });
 
 // Обробка команди /getinfo
@@ -19,9 +19,17 @@ bot.command('getinfo', (ctx) => {
   ctx.reply(info);
 });
 
+// Обробка команди /app
+bot.command('app', (ctx) => {
+  const miniAppUrl = 'https://t.me/beregtvinfobot/baza';
+  const message = `Натисніть на посилання, щоб відкрити Mini App: <a href="${miniAppUrl}">Відкрити Mini App</a>`;
+  ctx.replyWithHTML(message);
+});
+
+// Обробка будь-якого текстового повідомлення
 bot.on('text', (ctx) => {
-    ctx.reply('Привіт! Я ваш Telegram бот. Використовуйте /help для отримання списку команд.');
-  });
+  ctx.reply('Привіт! Я ваш Telegram бот. Використовуйте /help для отримання списку команд.');
+});
 
 export const handleTelegramUpdate = async (body) => {
   await bot.handleUpdate(body);
