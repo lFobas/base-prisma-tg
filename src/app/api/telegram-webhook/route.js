@@ -1,17 +1,10 @@
 import { NextResponse } from 'next/server';
-import { Telegraf } from 'telegraf';
-
-const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
-
-bot.on('text', (ctx) => {
-  ctx.reply('Привіт! Це відповідь від вашого Telegram бота.');
-});
+import { handleTelegramUpdate } from '@/lib/telegramBot';
 
 export async function POST(request) {
   try {
     const body = await request.json();
-    
-    await bot.handleUpdate(body); // Передача запиту до Telegraf для обробки
+    await handleTelegramUpdate(body);
 
     return NextResponse.json({ status: 'ok' }, { status: 200 });
   } catch (error) {
