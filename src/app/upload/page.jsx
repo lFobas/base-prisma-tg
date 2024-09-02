@@ -1,5 +1,5 @@
 'use client'
-import { createRecords } from '@/lib/actions';
+import { createManyClients, createRecords } from '@/lib/actions';
 import React, { useState } from 'react'
 import * as XLSX from 'xlsx';
 
@@ -53,8 +53,13 @@ const UploadPage = () => {
 
   };
 
-  const handleUpload = async ()=>{
+  const handleUploadRecords = async ()=>{
     const res = await createRecords(data)
+    console.log(res);
+  }
+
+  const handleUploadUsers = async ()=>{
+    const res = await createManyClients(data)
     console.log(res);
   }
 
@@ -62,10 +67,11 @@ const UploadPage = () => {
     <div className=''>
       <input type="file" accept=".xls,.xlsx" onChange={handleFileUpload} className='m-1' />
       {data.length > 0 ?
-        <>
-        <button className='w-24 h-12 bg-sky-800 rounded-md text-white' onClick={handleUpload}>Загрузити</button>
+        <div>
+        <button className='button mx-1 text-white' onClick={handleUploadRecords}>Загрузити Виписки</button>
+        <button disabled className='button mx-1 text-white' onClick={handleUploadUsers}>Загрузити Клієнтів</button>
         <button className='w-12 h-12 m-1 bg-red-800 rounded-md' onClick={((e)=> setData([]))}>x</button>
-        </>
+        </div>
          : null
       }
       <table>

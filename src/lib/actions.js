@@ -1,4 +1,5 @@
 'use server'
+import { mok } from "./mok";
 import prisma from "./prisma";
 
 export const editeClientById = async (id, body) =>{
@@ -117,13 +118,23 @@ export const getClientsByAdres = async (adres)=> {
     return newData
 }
 
-export const createRecords = async (data)=> {
-    console.log(data);
+export const createRecords = async (data) => {
+  try {
+      const res = await prisma.record.createMany({ data });
+      return JSON.parse(JSON.stringify(res));
+  } catch (error) {
+      console.error("Error in :", error)
+      return { error: error.message || 'An unknown error occurred' };
+  }
+};
+
+export const createManyClients = async (data)=> {
     try {
-      const res = await prisma.record.createMany({data})
-      return res
+      const res = await prisma.client.createMany({data})
+      return JSON.parse(JSON.stringify(res))
     } catch (error) {
-      return error
+      console.error("Error in tgUsersAnalitik:", error);
+      return { error: "Something went wrong" };
     }
     
 }

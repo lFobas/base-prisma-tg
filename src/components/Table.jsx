@@ -117,10 +117,10 @@ const Table = ({ adr }) => {
       <div className="w-full">
         <div className="flex justify-between">
         <h1 className="text-2xl font-bold"><Link href={"/"}>Борги</Link></h1>
-        <p className="flex mt-1">
+        <div className="flex mt-1">
           <h2 className="text-end my-auto">{user?.first_name}</h2>
           {/* {user ? <img src={user.photo_url} className="w-10 h-10 mx-1 rounded-full border-2 shadow-lg border-blue-800" /> : null} */}
-        </p>
+        </div>
         </div>
         <label className="mx-2 secondary-text">
           Населений пункт:
