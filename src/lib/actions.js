@@ -1,5 +1,4 @@
 'use server'
-import { mok } from "./mok";
 import prisma from "./prisma";
 
 export const editeClientById = async (id, body) =>{
