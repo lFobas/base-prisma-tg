@@ -6,6 +6,7 @@ import { useFilterStore, useUserStore } from "@/lib/store";
 import Spiner from "./Spiner/Spiner";
 import ClientListCard from "./Card/ClientListCard";
 import Link from "next/link";
+import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 
 
 const Table = ({ adr }) => {
@@ -120,6 +121,7 @@ const Table = ({ adr }) => {
         <div className="flex mt-1">
           <h2 className="text-end my-auto">{user?.first_name}</h2>
           {/* {user ? <img src={user.photo_url} className="w-10 h-10 mx-1 rounded-full border-2 shadow-lg border-blue-800" /> : null} */}
+          <Link className="px-2 py-1 rounded-sm my-bg" href="/manage"> <Cog6ToothIcon className="h-5 w-5" /></Link>
         </div>
         </div>
         <label className="mx-2 secondary-text">

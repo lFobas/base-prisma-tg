@@ -20,6 +20,14 @@
     color: var(--tg-theme-text-color);
   }
   
+  .my-bg {
+    background-color: var(--tg-theme-bg-color);
+  }
+
+  .my-bg-sec {
+    background-color: var(--tg-theme-secondary-bg-color);
+  }
+  
   a {
     color: var(--tg-theme-link-color);
   }

@@ -1,6 +1,5 @@
 import Table from "@/components/Table";
 import { getAdreses, getClients } from "@/lib/actions";
-import Link from "next/link";
 
 
 export const dynamic = 'force-dynamic';

@@ -185,3 +185,28 @@ export const tgUsersAnalitik = async (visitor) => {
     return { error: "Something went wrong" };
   }
 };
+
+export const getUsers = async()=> {
+  try {
+    const res = await prisma.user.findMany({include: { },})
+    return JSON.parse(JSON.stringify(res))
+  } catch (error) {
+    console.error("Error in geting user:", error);
+    return { error: "Something went wrong" };
+  }
+}
+
+export const editUserById = async (id, body) => {
+  try {
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: id,
+      },
+      data: body,
+    });
+    return updatedUser;
+  } catch (error) {
+    console.error('Error updating user:', error);
+    throw new Error('Failed to update user');
+  }
+};
