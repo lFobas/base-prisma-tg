@@ -22,7 +22,7 @@ export default function MenegeMenu() {
         {content}
       </div>
       <div
-        className='sm:w-2/12 w-16 h-full transition-all duration-300 ease-in-out flex flex-col absolute right-0 top-0'
+        className='sm:w-2/12 w-16 bg-gray-800 text-white h-full transition-all duration-300 ease-in-out flex flex-col absolute right-0 top-0'
       >
         <div className='flex item-center justify-center p-3'>
           <Link href={'/'} className="flex w-full p-1 button justify-end">
