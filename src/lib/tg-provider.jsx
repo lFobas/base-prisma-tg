@@ -33,7 +33,6 @@ export default function Telegram({ children }) {
         if (tgUser) {
           addUser(tgUser);
         } else {
-          setIsAuthorized(true)
           setLoading(false);
         }
         setThemeParams(theme);
