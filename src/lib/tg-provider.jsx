@@ -50,7 +50,7 @@ export default function Telegram({ children }) {
     return <Loader />;
   }
 
-  if (isAuthorized) {
+  if (!isAuthorized) {
     return <NotAuthorized />; 
   }
 
