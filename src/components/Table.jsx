@@ -32,6 +32,10 @@ const Table = ({ adr }) => {
   ]);
   const [user, initUser] = useUserStore((state)=> [state.user, state.initUser])
 
+  useEffect(() => {
+    console.log(dataCl); // Ви побачите оновлені дані
+  }, [dataCl]);
+
 
   const [displayClient, setDisplayClient] = useState(dataCl)
   const [isLoading, setIsLoading] = useState(false)
@@ -51,28 +55,29 @@ const Table = ({ adr }) => {
       }, 0)
   }
 
-  const adresChange = async(e) => {
-    setIsLoading(true)
-    setBaner(null)
+  const adresChange = async (e) => {
+    setIsLoading(true);
+    setBaner(null);
     const newAdres = e.target.value;
     selectAdres(newAdres);
-    if(newAdres === ''){
-      setIsLoading(true)
-      const newData = await getClients()
-      setDisplayClient(newData)
-      selectDataCl(newData)
-      setIsLoading(false)
-    }else{
-      const data = await getClientsByAdres(newAdres)
-      const filteredData = data.filter((c) => c.adres?.name === newAdres);
-      selectDataCl(filteredData)
-      if(filteredData.length > 0){
+    if (newAdres === '') {
+      setIsLoading(true);
+      const newData = await getClients();
+      setDisplayClient(newData);
+      selectDataCl(newData);
+      setIsLoading(false);
+    } else {
+      const data = await getClientsByAdres(newAdres);
+      const filteredData = data.filter((c) => c.adres === newAdres);
+      console.log(data);
+      selectDataCl(filteredData);
+      if (filteredData.length > 0) {
         setDisplayClient(filteredData);
-      }else{
+      } else {
         setDisplayClient(data);
       }
     }
-    setIsLoading(false)
+    setIsLoading(false);
   };
 
   const searcChange = (e)=>{  
@@ -98,14 +103,14 @@ const Table = ({ adr }) => {
   const borgChange =(e)=>{
     if(e.target.value){
       if(selectedAdres){
-        const filteredData = dataCl.filter((c) => getTotal(c.records) <= -e.target.value)
+        const filteredData = dataCl.filter((c) => c.records <= -e.target.value)
         if(filteredData.length >0 ){
           setDisplayClient(filteredData)
         }else{
           setDisplayClient([])
         }
       }else{
-        const filteredData = dataCl.filter((c) => getTotal(c.records) <= e.target.value)
+        const filteredData = dataCl.filter((c) => c.records <= -e.target.value)
         setDisplayClient(filteredData)
       }
     }else{
@@ -162,7 +167,7 @@ const Table = ({ adr }) => {
               displayClient.length > 0 ? (
                 displayClient
                   .filter(item => item.isNoActive === checkedActive && item.isUsilok === checkedUsilok)
-                  .map(item => <ClientListCard key={item.id} client={item} summa={getTotal(item.records)} />)
+                  .map(item => <ClientListCard key={item.id} client={item} summa={item.records} />)
               ) : (
                 <h1>{baner}</h1>
               )

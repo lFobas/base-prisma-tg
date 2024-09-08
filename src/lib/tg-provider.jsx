@@ -7,7 +7,7 @@ import Loader from '@/components/Loader/Loader';
 
 export default function Telegram({ children }) {
   const [themeParams, setThemeParams] = useState({});
-  const [user, initUser] = useUserStore((state) => [state.user, state.initUser]);
+  const initUser = useUserStore((state) => state.initUser);
   const [loading, setLoading] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
 

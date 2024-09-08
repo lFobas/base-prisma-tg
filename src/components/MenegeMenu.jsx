@@ -1,31 +1,14 @@
-'use client'
+import { UsersIcon, HomeModernIcon, MapIcon, CommandLineIcon } from '@heroicons/react/24/outline';
 
-import { useState } from 'react';
-import { UsersIcon, HomeModernIcon, MapIcon } from '@heroicons/react/24/outline';
-import UsersTable from './User/UsersTable';
-import { getUsers } from '@/lib/actions';
 import Link from 'next/link';
 
-export default function MenegeMenu() {
-
-  const [content, setContent] = useState(null);
-
-  const handleClick = async (type) => {
-    if (type === 'users') {
-      const res = await getUsers();
-      setContent(<UsersTable data={res} />);
-    } else if (type === 'adreses') {
-      setContent(<div>adreses Content</div>);
-    } else {
-      setContent(null); 
-    }
-  };
+export default function MenegeMenu({ children }) {
 
   return (
     <div className="flex h-screen">
-      <div className="w-10/12 p-6">
+      <div className="w-10/12 p-2 justify-center">
         <h2 className="text-2xl font-bold">Dashboard</h2>
-        {content}
+        { children }
       </div>
       <div
         className='sm:w-2/12 w-16 bg-gray-800 text-white h-full transition-all duration-300 ease-in-out flex flex-col absolute right-0 top-0'
@@ -38,16 +21,22 @@ export default function MenegeMenu() {
         <nav className="flex-1 p-3 mt-4">
           <ul>
             <li className="mb-4">
-              <button onClick={() => handleClick('users')} className="flex w-full p-1 justify-end">
-                <UsersIcon className="h-5 w-5" />
-                <span className='ml-3 hidden md:block'>Користувачі</span>
-              </button>
+              <Link href={'/manage'} className="flex w-full p-1 button justify-end">
+                <CommandLineIcon className='h-5 w-5' />
+                <span className='ml-3 hidden md:block'>Menu</span>
+              </Link>
             </li>
             <li className="mb-4">
-              <button onClick={() => handleClick('adreses')} className="flex w-full p-1 button justify-end">
+              <Link href={'/manage/users'} className="flex w-full p-1 justify-end">
+                <UsersIcon className="h-5 w-5" />
+                <span className='ml-3 hidden md:block'>Користувачі</span>
+              </Link>
+            </li>
+            <li className="mb-4">
+              <Link href={'/manage'} className="flex w-full p-1 button justify-end">
                 <MapIcon className='h-5 w-5' />
                 <span className='ml-3 hidden md:block'>Адреси</span>
-              </button>
+              </Link>
             </li>
           </ul>
         </nav>

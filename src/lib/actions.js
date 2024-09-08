@@ -1,4 +1,6 @@
 'use server'
+import { clientsDto } from "./DTO/client";
+import { userDto } from "./DTO/userDto";
 import prisma from "./prisma";
 
 export const editeClientById = async (id, body) =>{
@@ -34,13 +36,7 @@ export async function getClients() {
         records: true,
         adres: true,
       },})
-      const newData = data.map(item => ({
-        ...item,
-        records: item.records.map(record => ({
-          ...record,
-          summa: Number(record.summa)
-        }))
-      }));
+      const newData = data.map(item => clientsDto(item));
       newData.sort((a, b) => {
         const adresA = a.adres?.name; 
         const adresB = b.adres?.name;
@@ -87,13 +83,7 @@ export const getClientsByAdres = async (adres)=> {
             adres: true,
           },
       })
-      const newData = data.map(item => ({
-        ...item,
-        records: item.records.map(record => ({
-          ...record,
-          summa: Number(record.summa)
-        }))
-      }));
+      const newData = data.map(item => clientsDto(item));
       newData.sort((a, b) => {
         const streetA = a.street?.toLowerCase(); 
         const streetB = b.street?.toLowerCase();
@@ -189,7 +179,8 @@ export const tgUsersAnalitik = async (visitor) => {
 export const getUsers = async()=> {
   try {
     const res = await prisma.user.findMany({include: { },})
-    return JSON.parse(JSON.stringify(res))
+    const data = res.map(item => userDto(item))
+    return data
   } catch (error) {
     console.error("Error in geting user:", error);
     return { error: "Something went wrong" };
@@ -204,7 +195,7 @@ export const editUserById = async (id, body) => {
       },
       data: body,
     });
-    return updatedUser;
+    return userDto(updatedUser);
   } catch (error) {
     console.error('Error updating user:', error);
     throw new Error('Failed to update user');

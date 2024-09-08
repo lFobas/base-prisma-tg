@@ -16,6 +16,8 @@ export const useFilterStore = create((set, get) => ({
 
 export const useUserStore = create((set, get)=>({
   user: null,
+  users: [],
 
-  initUser: (data) => set({user: data})
+  initUser: (data) => set({user: data}),
+  setUsers: (newUsers) => set({ users: newUsers }),
 }))

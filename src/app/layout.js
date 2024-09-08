@@ -2,7 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Telegram from "@/lib/tg-provider";
 import { Analytics } from '@vercel/analytics/react';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 

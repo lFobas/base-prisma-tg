@@ -1,10 +1,9 @@
-import MenegeMenu from '@/components/MenegeMenu'
 import React from 'react'
 
-const ManagePage = () => {
+const ManagePage = ({ children }) => {
   return (
     <div>
-        <MenegeMenu />
+          {children}
     </div>
   )
 }
