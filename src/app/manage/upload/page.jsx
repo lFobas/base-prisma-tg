@@ -2,6 +2,7 @@
 import { createManyClients, createRecords } from '@/lib/actions';
 import React, { useState } from 'react'
 import * as XLSX from 'xlsx';
+import { toast } from 'react-toastify';
 
 const UploadPage = () => {
   const [data, setData] = useState([]);
@@ -13,38 +14,25 @@ const UploadPage = () => {
       reader.onload = (e) => {
       const binaryStr = e.target.result;
       const workbook = XLSX.read(binaryStr, { type: 'binary' });
-      
-      // Читання першого аркуша
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
-      
-      // Конвертація аркуша в масив об'єктів
       const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-      
-      // Перетворення масиву з заголовком в масив об'єктів
-      const keys = jsonData[0]; // Перший рядок - ключі
+      const keys = jsonData[0]; 
       const dataObjects = jsonData.slice(1).map(row => {
         let obj = {};
         keys.forEach((key, index) => {
           let value = row[index];
-          
-          // Перевірка, чи є значення числом і чи є ключ "дата"
           if (!isNaN(value) && key.toLowerCase().includes('date')) {
-            // Конвертація Excel серійного номеру дати в об'єкт Date
             const date = XLSX.SSF.parse_date_code(value);
             value = new Date(Date.UTC(date.y, date.m - 1, date.d, date.H, date.M, date.S));
             value = value.toISOString();
           }
-          
           obj[key] = value;
         });
         return obj;
       });
-      
-      setData(dataObjects);
-      
+      setData(dataObjects);   
     }
- 
     reader.readAsBinaryString(file);
   }else{
     setData([])
@@ -53,10 +41,23 @@ const UploadPage = () => {
 
   };
 
-  const handleUploadRecords = async ()=>{
-    const res = await createRecords(data)
-    console.log(res);
-  }
+  const handleUploadRecords = async () => {
+    try {
+      const res = await createRecords(data);
+      toast.success('Successfully!', {
+        autoClose: 1000,
+        theme: "dark",
+        draggable: true,
+      });
+    } catch (error) {
+      toast.error('Error uploading records.', {
+        autoClose: 1000,
+        theme: "dark",
+        draggable: true,
+      });
+      console.error('Error:', error);
+    }
+  };
 
   const handleUploadUsers = async ()=>{
     const res = await createManyClients(data)
