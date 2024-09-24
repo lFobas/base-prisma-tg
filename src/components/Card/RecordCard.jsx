@@ -29,7 +29,7 @@ const RecordCard = ({record, changeable}) => {
     }
 
   return (
-    <div className={`flex flex-col lg:flex-row lg:space-x-4 p-2 border-2 rounded-lg m-1 ${editedRecord.summa < 0 ? 'border-rose-600' : 'border-teal-600'}`}>
+    <div className={`flex flex-col lg:flex-row lg:space-x-4 p-2 border-2 rounded-lg m-1 ${editedRecord.summa < 0 ? 'border-rose-600 bg-red-500 bg-opacity-35' : 'border-teal-600 bg-green-600 bg-opacity-35'}`}>
         <div className="flex flex-col sm:flex-row sm:space-x-4 w-full">
             <div className='flex flex-row'>
                 <input
