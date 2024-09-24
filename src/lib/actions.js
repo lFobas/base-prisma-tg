@@ -1,163 +1,163 @@
-'use server'
+"use server";
 import { clientsDto } from "./DTO/client";
 import { userDto } from "./DTO/userDto";
 import prisma from "./prisma";
 
-export const editeClientById = async (id, body) =>{
-    try {
-        await prisma.client.update({
-            where: {
-                id: id
-            },
-            data: body
-        })
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-export const getClientById = async (id)=> {
-    const data = await prisma.client.findUnique({
-        where: {
-          id,
-        },
-        include: {
-            records: true,
-          },
-      })
-    data.records.forEach(record => {
-          record.summa = Number(record.summa);
-        });  
-    return data
-}
-
-export async function getClients() {
-    const data = await prisma.client.findMany({include: {
-        records: true,
-        adres: true,
-      },})
-      const newData = data.map(item => clientsDto(item));
-      newData.sort((a, b) => {
-        const adresA = a.adres?.name; 
-        const adresB = b.adres?.name;
-        if (adresA < adresB) {
-          return -1; 
-        }
-        if (adresA > adresB) {
-          return 1; 
-        }
-        const streetA = a.street?.toLowerCase(); 
-        const streetB = b.street?.toLowerCase();
-        if (streetA < streetB) {
-          return -1; 
-        }
-        if (streetA > streetB) {
-          return 1; 
-        }
-        const homeA = parseInt(a?.home, 10);
-        const homeB = parseInt(b?.home, 10);
-        if (homeA < homeB) {
-          return -1;
-          }
-        if (homeA > homeB) {
-            return 1;
-          }
-        return 0; 
-      }
-    )
-      return newData;
-    }
-  
-export async function getAdreses() {
-    const adreses = await prisma.adres.findMany();
-    return adreses;
-  }
-
-export const getClientsByAdres = async (adres)=> {
-    const data = await prisma.client.findMany({
-        where: {
-          adresId: adres,
-        },
-        include: {
-            records: true,
-            adres: true,
-          },
-      })
-      const newData = data.map(item => clientsDto(item));
-      newData.sort((a, b) => {
-        const streetA = a.street?.toLowerCase(); 
-        const streetB = b.street?.toLowerCase();
-        if (streetA < streetB) {
-          return -1; 
-        }
-        if (streetA > streetB) {
-          return 1; 
-        }
-        const homeA = parseInt(a?.home, 10);
-        const homeB = parseInt(b?.home, 10);
-        if (homeA < homeB) {
-          return -1;
-          }
-        if (homeA > homeB) {
-            return 1;
-          }
-        return 0; 
-      }
-    )  
-    return newData
-}
-
-export const createRecords = async (data) => {
+export const editeClientById = async (id, body) => {
   try {
-      const res = await prisma.record.createMany({ data });
-      return JSON.parse(JSON.stringify(res));
+    await prisma.client.update({
+      where: {
+        id: id,
+      },
+      data: body,
+    });
   } catch (error) {
-      console.error("Error in :", error)
-      return { error: error.message || 'An unknown error occurred' };
+    console.error(error);
   }
 };
 
-export const createManyClients = async (data)=> {
-    try {
-      const res = await prisma.client.createMany({data})
-      return JSON.parse(JSON.stringify(res))
-    } catch (error) {
-      console.error("Error in tgUsersAnalitik:", error);
-      return { error: "Something went wrong" };
+export const getClientById = async (id) => {
+  const data = await prisma.client.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      records: true,
+    },
+  });
+  data.records.forEach((record) => {
+    record.summa = Number(record.summa);
+  });
+  return data;
+};
+
+export async function getClients() {
+  const data = await prisma.client.findMany({
+    include: {
+      records: true,
+      adres: true,
+    },
+  });
+  const newData = data.map((item) => clientsDto(item));
+  newData.sort((a, b) => {
+    const adresA = a.adres?.name;
+    const adresB = b.adres?.name;
+    if (adresA < adresB) {
+      return -1;
     }
-    
+    if (adresA > adresB) {
+      return 1;
+    }
+    const streetA = a.street?.toLowerCase();
+    const streetB = b.street?.toLowerCase();
+    if (streetA < streetB) {
+      return -1;
+    }
+    if (streetA > streetB) {
+      return 1;
+    }
+    const homeA = parseInt(a?.home, 10);
+    const homeB = parseInt(b?.home, 10);
+    if (homeA < homeB) {
+      return -1;
+    }
+    if (homeA > homeB) {
+      return 1;
+    }
+    return 0;
+  });
+  return newData;
 }
 
-export const getRecordsByDate = async (selectedDate) =>{
+export async function getAdreses() {
+  const adreses = await prisma.adres.findMany();
+  return adreses;
+}
+
+export const getClientsByAdres = async (adres) => {
+  const data = await prisma.client.findMany({
+    where: {
+      adresId: adres,
+    },
+    include: {
+      records: true,
+      adres: true,
+    },
+  });
+  const newData = data.map((item) => clientsDto(item));
+  newData.sort((a, b) => {
+    const streetA = a.street?.toLowerCase();
+    const streetB = b.street?.toLowerCase();
+    if (streetA < streetB) {
+      return -1;
+    }
+    if (streetA > streetB) {
+      return 1;
+    }
+    const homeA = parseInt(a?.home, 10);
+    const homeB = parseInt(b?.home, 10);
+    if (homeA < homeB) {
+      return -1;
+    }
+    if (homeA > homeB) {
+      return 1;
+    }
+    return 0;
+  });
+  return newData;
+};
+
+export const createRecords = async (data) => {
+  try {
+    const res = await prisma.record.createMany({ data });
+    return JSON.parse(JSON.stringify(res));
+  } catch (error) {
+    console.error("Error in :", error);
+    return { error: error.message || "An unknown error occurred" };
+  }
+};
+
+export const createManyClients = async (data) => {
+  try {
+    const res = await prisma.client.createMany({ data });
+    return JSON.parse(JSON.stringify(res));
+  } catch (error) {
+    console.error("Error in tgUsersAnalitik:", error);
+    return { error: "Something went wrong" };
+  }
+};
+
+export const getRecordsByDate = async (selectedDate) => {
   const records = await prisma.record.findMany({
     where: {
-      date: new Date(selectedDate)  // Перетворення selectedDate на об'єкт Date
-    }
+      date: new Date(selectedDate), // Перетворення selectedDate на об'єкт Date
+    },
   });
-  records.forEach(record => {
+  records.forEach((record) => {
     record.summa = Number(record.summa);
   });
   return records;
-}
+};
 
-export const editeRecordById = async (id, body) =>{
+export const editeRecordById = async (id, body) => {
   try {
     const res = await prisma.record.update({
-        where: {
-            id: id
-        },
-        data: body
-    })
-    return res
-} catch (error) {
+      where: {
+        id: id,
+      },
+      data: body,
+    });
+    return res;
+  } catch (error) {
     console.error(error);
-    return error
-}
-}
+    return error;
+  }
+};
 
 export const tgUsersAnalitik = async (visitor) => {
   try {
-    const visitorData = typeof visitor === 'string' ? JSON.parse(visitor) : visitor;
+    const visitorData =
+      typeof visitor === "string" ? JSON.parse(visitor) : visitor;
 
     const user = await prisma.user.upsert({
       where: { telegramId: visitorData.id.toString() },
@@ -176,16 +176,16 @@ export const tgUsersAnalitik = async (visitor) => {
   }
 };
 
-export const getUsers = async()=> {
+export const getUsers = async () => {
   try {
-    const res = await prisma.user.findMany({include: { },})
-    const data = res.map(item => userDto(item))
-    return data
+    const res = await prisma.user.findMany({ include: {} });
+    const data = res.map((item) => userDto(item));
+    return data;
   } catch (error) {
     console.error("Error in geting user:", error);
     return { error: "Something went wrong" };
   }
-}
+};
 
 export const editUserById = async (id, body) => {
   try {
@@ -197,7 +197,7 @@ export const editUserById = async (id, body) => {
     });
     return userDto(updatedUser);
   } catch (error) {
-    console.error('Error updating user:', error);
-    throw new Error('Failed to update user');
+    console.error("Error updating user:", error);
+    throw new Error("Failed to update user");
   }
 };

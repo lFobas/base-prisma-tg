@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const ManagePage = ({ children }) => {
-  return (
-    <div>
-          {children}
-    </div>
-  )
-}
+  return <div>{children}</div>;
+};
 
-export default ManagePage
+export default ManagePage;

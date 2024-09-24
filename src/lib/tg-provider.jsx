@@ -1,9 +1,9 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { useUserStore } from './store';
-import { tgUsersAnalitik } from './actions';
-import NotAuthorized from '@/components/NotAuthorized';
-import Loader from '@/components/Loader/Loader';
+"use client";
+import { useEffect, useState } from "react";
+import { useUserStore } from "./store";
+import { tgUsersAnalitik } from "./actions";
+import NotAuthorized from "@/components/NotAuthorized";
+import Loader from "@/components/Loader/Loader";
 
 export default function Telegram({ children }) {
   const [themeParams, setThemeParams] = useState({});
@@ -16,15 +16,15 @@ export default function Telegram({ children }) {
     const res = await tgUsersAnalitik(visitor);
     initUser(res);
 
-    if (res.role === 'ADMIN') {
-      setIsAuthorized(true); 
+    if (res.role === "ADMIN") {
+      setIsAuthorized(true);
     }
-    setLoading(false); 
+    setLoading(false);
   };
 
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://telegram.org/js/telegram-web-app.js';
+    const script = document.createElement("script");
+    script.src = "https://telegram.org/js/telegram-web-app.js";
     script.async = true;
     script.onload = () => {
       if (window.Telegram?.WebApp) {
@@ -51,8 +51,8 @@ export default function Telegram({ children }) {
   }
 
   if (!isAuthorized) {
-    return <NotAuthorized />; 
+    return <NotAuthorized />;
   }
 
-  return <div>{children}</div>; 
+  return <div>{children}</div>;
 }

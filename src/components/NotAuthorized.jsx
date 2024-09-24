@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const NotAuthorized = () => (
   <div className="flex h-screen w-screen items-center justify-center my-bg p-4 sm:p-8">
@@ -19,12 +19,14 @@ const NotAuthorized = () => (
           ></path>
         </svg>
       </div>
-      <h1 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-2">Access Denied</h1>
+      <h1 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-2">
+        Access Denied
+      </h1>
       <p className="text-gray-600 text-sm sm:text-base">
         У Вас Немає Доступу до цієї сторінки.
       </p>
     </div>
   </div>
-  );
+);
 
 export default NotAuthorized;
