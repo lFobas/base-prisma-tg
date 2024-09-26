@@ -14,12 +14,23 @@ const Auth = () => {
   ]);
 
   useEffect(() => {
-    if (user?.role === "ADMIN") {
-      router.push("/borg");
-    }
-  }, []);
+    const tgUser = window.Telegram?.WebApp.initDataUnsafe.user;
 
-  const handleSubmit = async (e) => {
+    const fetchUserAndRedirect = async () => {
+      if (tgUser) {
+        const res = await getUser(tgUser.id);
+        initUser(res);
+
+        if (res?.role === "ADMIN") {
+          router.push("/borg");
+        }
+      }
+    };
+
+    fetchUserAndRedirect();
+  }, [initUser, router]);
+
+  const handleSubmit = async () => {
     try {
       const res = await getUser(telegramIdForm);
       initUser(res);
