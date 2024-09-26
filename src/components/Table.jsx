@@ -33,13 +33,10 @@ const Table = ({ adr }) => {
     state.initUser,
   ]);
 
-  useEffect(() => {
-    console.log(dataCl); // Ви побачите оновлені дані
-  }, [dataCl]);
-
   const [displayClient, setDisplayClient] = useState(dataCl);
   const [isLoading, setIsLoading] = useState(false);
   const [baner, setBaner] = useState("");
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     setIsLoading(true);
@@ -47,11 +44,22 @@ const Table = ({ adr }) => {
     setIsLoading(false);
   }, []);
 
-  const getTotal = (items = []) => {
-    return items.reduce((acc, item) => {
-      return (acc += parseFloat(item.summa));
-    }, 0);
-  };
+  useEffect(() => {
+    if (displayClient.length > 0) {
+      const result = displayClient.filter(
+        (item) =>
+          item.isNoActive === checkedActive && item.isUsilok === checkedUsilok
+      );
+      setCount(result.length)
+    }
+  }, [displayClient, checkedActive, checkedUsilok]); 
+  
+
+  // const getTotal = (items = []) => {
+  //   return items.reduce((acc, item) => {
+  //     return (acc += parseFloat(item.summa));
+  //   }, 0);
+  // };
 
   const adresChange = async (e) => {
     setIsLoading(true);
@@ -67,7 +75,6 @@ const Table = ({ adr }) => {
     } else {
       const data = await getClientsByAdres(newAdres);
       const filteredData = data.filter((c) => c.adres === newAdres);
-      console.log(data);
       selectDataCl(filteredData);
       if (filteredData.length > 0) {
         setDisplayClient(filteredData);
@@ -125,7 +132,7 @@ const Table = ({ adr }) => {
     <div className="w-full">
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold">
-          <Link href={"/"}>Борги</Link>
+          <Link href={"/borg"}>Борги</Link>
         </h1>
         <div className="flex mt-1">
           <h2 className="text-end my-auto">{user?.name}</h2>
@@ -191,6 +198,7 @@ const Table = ({ adr }) => {
           placeholder="Борг Більше"
         />
       </div>
+      {count ? <div className="flex justify-end text-xs mt-1 secondary-text">Загалом: <p className="font-bold">{count}</p></div> : <></>}
       {!isLoading ? (
         displayClient.length > 0 ? (
           displayClient

@@ -5,7 +5,7 @@ const ClientListCard = ({ client, summa }) => {
   return (
     <Link
       href={`/client/${client.id}`}
-      className="flex-wrap grid grid-cols-8 items-center justify-between border border-gray-300 rounded-md px-1 py-3 my-3 shadow-sm secondary-background w-full"
+      className="flex-wrap grid grid-cols-8 items-center justify-between border border-gray-300 rounded-md px-1 py-3 mb-2 shadow-sm secondary-background w-full"
     >
       <div className="col-span-1 font-semibold text-center flex-grow-0">
         {client.bill}

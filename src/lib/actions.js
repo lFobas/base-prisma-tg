@@ -17,19 +17,35 @@ export const editeClientById = async (id, body) => {
 };
 
 export const getClientById = async (id) => {
-  const data = await prisma.client.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      records: true,
-    },
-  });
-  data.records.forEach((record) => {
-    record.summa = Number(record.summa);
-  });
-  return data;
+  try {
+    const data = await prisma.client.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        records: true,
+      },
+    });
+
+    if (!data) {
+      return null;
+    }
+
+    const updatedRecords = data.records.map((record) => ({
+      ...record,
+      summa: Number(record.summa),
+    }));
+
+    return {
+      ...data,
+      records: updatedRecords, 
+    };
+  } catch (error) {
+    console.error("Помилка при отриманні клієнта:", error);
+    throw new Error("Не вдалося отримати клієнта");
+  }
 };
+
 
 export async function getClients() {
   const data = await prisma.client.findMany({
@@ -168,7 +184,6 @@ export const tgUsersAnalitik = async (visitor) => {
       },
     });
 
-    // Перетворення user на plain object
     return JSON.parse(JSON.stringify(user));
   } catch (error) {
     console.error("Error in tgUsersAnalitik:", error);
@@ -184,6 +199,23 @@ export const getUsers = async () => {
   } catch (error) {
     console.error("Error in geting user:", error);
     return { error: "Something went wrong" };
+  }
+};
+
+export const getUser = async (id) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { telegramId: id },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    return userDto(user);
+  } catch (error) {
+    console.error("Помилка під час отримання користувача:", error);
+    throw new Error("Не вдалося отримати користувача");
   }
 };
 
