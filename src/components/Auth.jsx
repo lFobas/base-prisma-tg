@@ -1,11 +1,12 @@
 "use client";
 import { getUser } from "@/lib/actions";
 import { useUserStore } from "@/lib/store";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-const Auth = ({ login  }) => {
+
+const Auth = ({ login, block  }) => {
   const router = useRouter();
   const [telegramIdForm, setTelegramIdForm] = useState("");
   const [initUser, user] = useUserStore((state) => [
@@ -13,11 +14,6 @@ const Auth = ({ login  }) => {
     state.user,
   ]);
 
-  // useEffect(() => {
-  //   if (user?.role === "ADMIN") {
-  //     router.push("/borg");
-  //   }
-  // }, []);
 
   const handleSubmit = async (e) => {
     try {
@@ -38,6 +34,8 @@ const Auth = ({ login  }) => {
           draggable: true,
         });
         console.log("Login failed");
+        login(true)
+        block(true)
       }
     } catch (error) {
       console.error("Error during login:", error);

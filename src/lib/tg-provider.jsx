@@ -14,6 +14,7 @@ export default function Telegram({ children }) {
   ]);
   const [loading, setLoading] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const [guest, setGuest] = useState(false);
   const router = useRouter();
 
   const addUser = async (data) => {
@@ -24,6 +25,8 @@ export default function Telegram({ children }) {
     if (res.role === "ADMIN") {
       setIsAuthorized(true);
       router.push("/borg");
+    }else{
+      setGuest(true)
     }
     setLoading(false);
   };
@@ -43,6 +46,8 @@ export default function Telegram({ children }) {
         if (user?.role === "ADMIN") {
           setIsAuthorized(true);
           router.push("/borg");
+        }else{
+          setGuest(true)
         }
         window.Telegram.WebApp.expand();
       }
@@ -59,7 +64,10 @@ export default function Telegram({ children }) {
   }
 
   if (!isAuthorized) {
-    return <Auth login={setIsAuthorized} />;
+    return <Auth login={setIsAuthorized} block={setGuest} />;
+  }
+  if(guest){
+    return <NotAuthorized />
   }
 
   return <div>{children}</div>;
