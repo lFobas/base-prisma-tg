@@ -13,11 +13,11 @@ const Auth = ({ login  }) => {
     state.user,
   ]);
 
-  useEffect(() => {
-    if (user?.role === "ADMIN") {
-      router.push("/borg");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (user?.role === "ADMIN") {
+  //     router.push("/borg");
+  //   }
+  // }, []);
 
   const handleSubmit = async (e) => {
     try {
@@ -29,7 +29,7 @@ const Auth = ({ login  }) => {
           theme: "dark",
           draggable: true,
         });
-        login (true)
+        login(true)
         router.push("/borg");
       } else {
         toast.error("Login failed", {

@@ -40,6 +40,10 @@ export default function Telegram({ children }) {
         } else {
           setLoading(false);
         }
+        if (user?.role === "ADMIN") {
+          setIsAuthorized(true);
+          router.push("/borg");
+        }
         window.Telegram.WebApp.expand();
       }
     };
