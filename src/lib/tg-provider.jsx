@@ -21,9 +21,9 @@ export default function Telegram({ children }) {
     const visitor = JSON.stringify(data);
     const res = await tgUsersAnalitik(visitor);
     initUser(res);
-
     if (res.role === "ADMIN") {
       setIsAuthorized(true);
+      setGuest(false)
       router.push("/borg");
     }else{
       setGuest(true)
