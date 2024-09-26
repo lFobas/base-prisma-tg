@@ -5,9 +5,9 @@ import { tgUsersAnalitik } from "./actions";
 import NotAuthorized from "@/components/NotAuthorized";
 import Loader from "@/components/Loader/Loader";
 import { useRouter } from "next/navigation";
+import Auth from "@/components/Auth";
 
 export default function Telegram({ children }) {
-  const [themeParams, setThemeParams] = useState({});
   const [initUser, user] = useUserStore((state) => [
     state.initUser,
     state.user,
@@ -23,6 +23,7 @@ export default function Telegram({ children }) {
 
     if (res.role === "ADMIN") {
       setIsAuthorized(true);
+      router.push("/borg");
     }
     setLoading(false);
   };
@@ -33,24 +34,12 @@ export default function Telegram({ children }) {
     script.async = true;
     script.onload = () => {
       if (window.Telegram?.WebApp) {
-        const theme = window.Telegram.WebApp.themeParams;
         const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
         if (tgUser) {
           addUser(tgUser);
-          router.push("/borg");
         } else {
-          if (!user) {
-            setLoading(false);
-            router.push("/");
-          }else{
-            if(user.role === "ADMIN"){
-              setIsAuthorized(true)
-              setLoading(false)
-            }
-            setLoading(false)
-          }
+          setLoading(false);
         }
-        setThemeParams(theme);
         window.Telegram.WebApp.expand();
       }
     };
@@ -66,7 +55,7 @@ export default function Telegram({ children }) {
   }
 
   if (!isAuthorized) {
-    return <NotAuthorized />;
+    return <Auth login={setIsAuthorized} />;
   }
 
   return <div>{children}</div>;

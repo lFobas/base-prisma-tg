@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-const Auth = () => {
+const Auth = ({ login  }) => {
   const router = useRouter();
   const [telegramIdForm, setTelegramIdForm] = useState("");
   const [initUser, user] = useUserStore((state) => [
@@ -14,23 +14,12 @@ const Auth = () => {
   ]);
 
   useEffect(() => {
-    const tgUser = window.Telegram?.WebApp.initDataUnsafe.user;
+    if (user?.role === "ADMIN") {
+      router.push("/borg");
+    }
+  }, []);
 
-    const fetchUserAndRedirect = async () => {
-      if (tgUser) {
-        const res = await getUser(tgUser.id);
-        initUser(res);
-
-        if (res?.role === "ADMIN") {
-          router.push("/borg");
-        }
-      }
-    };
-
-    fetchUserAndRedirect();
-  }, [initUser, router]);
-
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
     try {
       const res = await getUser(telegramIdForm);
       initUser(res);
@@ -40,6 +29,7 @@ const Auth = () => {
           theme: "dark",
           draggable: true,
         });
+        login (true)
         router.push("/borg");
       } else {
         toast.error("Login failed", {

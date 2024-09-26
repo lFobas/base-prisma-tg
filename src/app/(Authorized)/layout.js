@@ -4,7 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 export default function AuthorizedLayout({ children }) {
   return (
     <>
-      <Telegram>{children}</Telegram>
+      <>{children}</>
     </>
   );
 }

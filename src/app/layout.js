@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ScrollToTopButton from "@/components/UI/ScrollToTopButton";
+import Telegram from "@/lib/tg-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +19,7 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <ToastContainer />
         <ScrollToTopButton />
-        {children}
+        <Telegram>{children}</Telegram>
         <Analytics />
       </body>
     </html>
