@@ -23,11 +23,13 @@ export default function Telegram({ children }) {
     initUser(res);
     if (res.role === "ADMIN") {
       setIsAuthorized(true);
-      setGuest(false)
+      setGuest(false);
       router.push("/borg");
-    }else{
-      setGuest(true)
+    } else {
+      setIsAuthorized(true);
+      setGuest(true);
     }
+
     setLoading(false);
   };
 
@@ -46,8 +48,8 @@ export default function Telegram({ children }) {
         if (user?.role === "ADMIN") {
           setIsAuthorized(true);
           router.push("/borg");
-        }else{
-          setGuest(true)
+        } else {
+          setGuest(true);
         }
         window.Telegram.WebApp.expand();
       }
@@ -66,8 +68,8 @@ export default function Telegram({ children }) {
   if (!isAuthorized) {
     return <Auth login={setIsAuthorized} block={setGuest} />;
   }
-  if(guest){
-    return <NotAuthorized />
+  if (guest) {
+    return <NotAuthorized />;
   }
 
   return <div>{children}</div>;

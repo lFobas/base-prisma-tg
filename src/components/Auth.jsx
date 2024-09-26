@@ -5,15 +5,13 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-
-const Auth = ({ login, block  }) => {
+const Auth = ({ login, block }) => {
   const router = useRouter();
   const [telegramIdForm, setTelegramIdForm] = useState("");
   const [initUser, user] = useUserStore((state) => [
     state.initUser,
     state.user,
   ]);
-
 
   const handleSubmit = async (e) => {
     try {
@@ -25,7 +23,8 @@ const Auth = ({ login, block  }) => {
           theme: "dark",
           draggable: true,
         });
-        login(true)
+        login(true);
+        block(false);
         router.push("/borg");
       } else {
         toast.error("Login failed", {
@@ -34,8 +33,8 @@ const Auth = ({ login, block  }) => {
           draggable: true,
         });
         console.log("Login failed");
-        login(true)
-        block(true)
+        login(true);
+        block(true);
       }
     } catch (error) {
       console.error("Error during login:", error);
