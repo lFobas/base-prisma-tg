@@ -48,7 +48,7 @@ const UserCard = ({ user }) => {
       <div className="flex content-center justify-end">
         <select
           name="role"
-          value={userData.role}
+          value={userData?.role}
           onChange={handleChange}
           className="border border-gray-300 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2.5"
         >

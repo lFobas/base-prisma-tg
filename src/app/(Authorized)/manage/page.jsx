@@ -1,7 +1,10 @@
+import UserInfo from "@/components/UserInfo";
 import React from "react";
 
-const ManagePage = ({ children }) => {
-  return <div>{children}</div>;
+const ManagePage = () => {
+  return <div>
+    <UserInfo />
+  </div>;
 };
 
 export default ManagePage;

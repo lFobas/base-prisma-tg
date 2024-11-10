@@ -5,6 +5,7 @@ import {
   CommandLineIcon,
   DocumentCurrencyDollarIcon,
   ArrowUpTrayIcon,
+  ArrowUpCircleIcon,
 } from "@heroicons/react/24/outline";
 
 import Link from "next/link";
@@ -67,6 +68,13 @@ export default function MenegeMenu({ children }) {
               >
                 <ArrowUpTrayIcon className="h-5 w-5" />
                 <span className="ml-3 hidden md:block">Загрузка</span>
+              </Link>
+              <Link
+                href={"/v2"}
+                className="flex w-full p-1 button justify-end md:justify-start"
+              >
+                <ArrowUpCircleIcon className="h-5 w-5" />
+                <span className="ml-3 hidden md:block">New Style</span>
               </Link>
             </li>
           </ul>

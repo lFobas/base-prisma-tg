@@ -59,7 +59,7 @@ export default function Telegram({ children }) {
     return () => {
       document.body.removeChild(script);
     };
-  }, []);
+  }, [user]);
 
   if (loading) {
     return <Loader />;
