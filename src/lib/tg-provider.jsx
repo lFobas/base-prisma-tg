@@ -21,13 +21,13 @@ export default function Telegram({ children }) {
     const visitor = JSON.stringify(data);
     const res = await tgUsersAnalitik(visitor);
     initUser(res);
-    if (res.role === "ADMIN") {
+    if (res.role !== "GUEST") {
+      setIsAuthorized(true);
+      setGuest(true);
+    } else {
       setIsAuthorized(true);
       setGuest(false);
       router.push("/borg");
-    } else {
-      setIsAuthorized(true);
-      setGuest(true);
     }
 
     setLoading(false);
