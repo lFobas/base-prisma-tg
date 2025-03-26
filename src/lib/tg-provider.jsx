@@ -21,8 +21,8 @@ export default function Telegram({ children }) {
     const visitor = JSON.stringify(data);
     const res = await tgUsersAnalitik(visitor);
     initUser(res);
-    if (res.role !== "GUEST") {
-      setIsAuthorized(true);
+    if (res.role === "GUEST") {
+      setIsAuthorized(false);
       setGuest(true);
     } else {
       setIsAuthorized(true);
