@@ -54,7 +54,6 @@ const Table = ({ adr }) => {
       );
       setCount(result.length);
       setZagalno(getTotal(result));
-      
     }
   }, [displayClient, checkedActive, checkedUsilok]);
 
@@ -173,9 +172,11 @@ const Table = ({ adr }) => {
             ))}
           </select>
         </div>
-        <h1 className="flex justify-between items-center text-2xl font-bold pt-4 w-1/2">
-          <p>Заг:</p>
-          <p>{displayClient.length > 0 ? zagalno : "0"}грн.</p>
+        <h1 className="flex flex-col w-1/2">
+          <label className="mx-2 secondary-text">Загальний Борг:</label>
+          <p className="flex  mb-2 border border-gray-300  rounded-lg justify-end w-full p-2.5">
+            {displayClient.length > 0 ? zagalno : "0"}грн.
+          </p>
         </h1>
       </div>
       <label className="mx-2 secondary-text">Пошук по імені абонента:</label>
