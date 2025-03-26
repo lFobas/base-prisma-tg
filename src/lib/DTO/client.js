@@ -1,4 +1,4 @@
-const getTotal = (items = []) => {
+export const getTotal = (items = []) => {
   return items.reduce((acc, item) => {
     return (acc += parseFloat(item.summa));
   }, 0);

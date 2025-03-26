@@ -17,7 +17,7 @@ const Auth = ({ login, block }) => {
     try {
       const res = await getUser(telegramIdForm);
       initUser(res);
-      if (res?.role === "ADMIN") {
+      if (res?.role !== "GUEST") {
         toast.success("Авторизовано!", {
           autoClose: 1000,
           theme: "dark",

@@ -44,14 +44,19 @@ export default function Telegram({ children }) {
           addUser(tgUser);
         } else {
           setLoading(false);
+          setIsAuthorized(false);
         }
-        if (user?.role === "ADMIN") {
+        if (user?.role === "GUEST" || !user) {
+          setGuest(true);
+        } else {
           setIsAuthorized(true);
           router.push("/borg");
-        } else {
-          setGuest(true);
         }
         window.Telegram.WebApp.expand();
+      } else {
+        setGuest(true);
+        setIsAuthorized(false);
+        setLoading(false);
       }
     };
     document.body.appendChild(script);

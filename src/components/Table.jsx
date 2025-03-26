@@ -7,6 +7,7 @@ import Spiner from "./Spiner/Spiner";
 import ClientListCard from "./Card/ClientListCard";
 import Link from "next/link";
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftCircleIcon } from "@heroicons/react/24/outline";
 
 const Table = ({ adr }) => {
   const [
@@ -37,6 +38,7 @@ const Table = ({ adr }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [baner, setBaner] = useState("");
   const [count, setCount] = useState(0);
+  const [zagalno, setZagalno] = useState(0);
 
   useEffect(() => {
     setIsLoading(true);
@@ -50,16 +52,17 @@ const Table = ({ adr }) => {
         (item) =>
           item.isNoActive === checkedActive && item.isUsilok === checkedUsilok
       );
-      setCount(result.length)
+      setCount(result.length);
+      setZagalno(getTotal(result));
+      
     }
-  }, [displayClient, checkedActive, checkedUsilok]); 
-  
+  }, [displayClient, checkedActive, checkedUsilok]);
 
-  // const getTotal = (items = []) => {
-  //   return items.reduce((acc, item) => {
-  //     return (acc += parseFloat(item.summa));
-  //   }, 0);
-  // };
+  const getTotal = (items = []) => {
+    return items.reduce((acc, item) => {
+      return (acc += parseFloat(item.records));
+    }, 0);
+  };
 
   const adresChange = async (e) => {
     setIsLoading(true);
@@ -137,26 +140,44 @@ const Table = ({ adr }) => {
         <div className="flex mt-1">
           <h2 className="text-end my-auto">{user?.name}</h2>
           {/* {user ? <img src={user.photo_url} className="w-10 h-10 mx-1 rounded-full border-2 shadow-lg border-blue-800" /> : null} */}
-          <Link className="px-2 py-1 rounded-sm my-bg" href="/manage">
-            {" "}
-            <Cog6ToothIcon className="h-5 w-5" />
-          </Link>
+          {user.role === "ADMIN" ? (
+            <Link className="px-2 py-1 rounded-sm my-bg" href="/manage">
+              {" "}
+              <Cog6ToothIcon className="h-5 w-5" />
+            </Link>
+          ) : (
+            <Link
+              href="/"
+              className="px-2 py-1 rounded-sm my-bg"
+              onClick={() => initUser("")}
+            >
+              <ArrowLeftCircleIcon className="h-5 w-5" />
+            </Link>
+          )}
         </div>
       </div>
-      <label className="mx-2 secondary-text">Населений пункт:</label>
-      <select
-        name="adres"
-        defaultValue={selectedAdres}
-        onChange={adresChange}
-        className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5"
-      >
-        <option value="">Всі Села</option>
-        {adr.map((a) => (
-          <option key={a.name} value={a?.name}>
-            {a?.name}
-          </option>
-        ))}
-      </select>
+      <div className="flex gap-3">
+        <div className="flex flex-col w-1/2">
+          <label className="mx-2 secondary-text">Населений пункт:</label>
+          <select
+            name="adres"
+            defaultValue={selectedAdres}
+            onChange={adresChange}
+            className="flex  mb-2 border border-gray-300 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 w-full p-2.5"
+          >
+            <option value="">Всі Села</option>
+            {adr.map((a) => (
+              <option key={a.name} value={a?.name}>
+                {a?.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <h1 className="flex justify-between items-center text-2xl font-bold pt-4 w-1/2">
+          <p>Заг:</p>
+          <p>{displayClient.length > 0 ? zagalno : "0"}грн.</p>
+        </h1>
+      </div>
       <label className="mx-2 secondary-text">Пошук по імені абонента:</label>
       <input
         type="text"
@@ -198,7 +219,13 @@ const Table = ({ adr }) => {
           placeholder="Борг Більше"
         />
       </div>
-      {count ? <div className="flex justify-end text-xs mt-1 secondary-text">Загалом: <p className="font-bold">{count}</p></div> : <></>}
+      {count ? (
+        <div className="flex justify-end text-xs mt-1 secondary-text">
+          Загалом: <p className="font-bold">{count}</p>
+        </div>
+      ) : (
+        <></>
+      )}
       {!isLoading ? (
         displayClient.length > 0 ? (
           displayClient
