@@ -133,6 +133,33 @@ export const createRecords = async (data) => {
   }
 };
 
+export const createRecords1C = async (data) => {
+  try {
+    // Проверяем, что все authorId существуют в Client
+    const authorIds = data.map((record) => record.authorId);
+    const existingClients = await prisma.client.findMany({
+      where: { name: { in: authorIds } },
+      select: { name: true },
+    });
+    const existingClientNames = existingClients.map((client) => client.name);
+
+    // Фильтруем только те записи, где authorId существует
+    const validData = data.filter((record) =>
+      existingClientNames.includes(record.authorId)
+    );
+
+    if (validData.length === 0) {
+      throw new Error("No valid records with existing authorId found");
+    }
+
+    const res = await prisma.record.createMany({ data: validData });
+    return JSON.parse(JSON.stringify(res));
+  } catch (error) {
+    console.error("Error in createRecords:", error);
+    return { error: error.message || "An unknown error occurred" };
+  }
+};
+
 export const createManyClients = async (data) => {
   try {
     const res = await prisma.client.createMany({ data });
