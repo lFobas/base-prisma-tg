@@ -1,14 +1,12 @@
-'use server'
+"use server";
 
 import { Telegraf, Markup } from "telegraf";
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 
-
 export async function sendTelegramMessage(message) {
-  
   const chatId = process.env.TELEGRAM_MY_ID;
-  
+
   if (!chatId || !message) return;
 
   try {
@@ -40,7 +38,6 @@ bot.command("getinfo", (ctx) => {
   const info = `Ваше ім'я: ${first_name}\nВаш User ID: ${userId}\nВаш Chat ID: ${chatId}`;
   ctx.reply(info);
 });
-
 
 // Обробка команди /app
 bot.command("app", (ctx) => {

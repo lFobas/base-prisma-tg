@@ -3,7 +3,6 @@ import RecordCard from "@/components/Card/RecordCard";
 import Spiner from "@/components/Spiner/Spiner";
 import { editeClientById, getClientById } from "@/lib/actions";
 import { sendTelegramMessage } from "@/lib/telegramBot";
-import { sendTelegramMessage } from "@/lib/telegramBot";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -42,17 +41,7 @@ const ClientDetailPage = (params) => {
     setIsLoading(true);
     await editeClientById(id, data);
     await initData();
-    const message = `Клієнт ${client.bill} | ${client.name} - ${
-      client.adresId
-    }: ${client.street}, ${client.home} ${
-      data.isNoActive ? "деактивовано" : "активовано"
-    }.`;
-    try {
-      await sendTelegramMessage(message);
-    } catch (err) {
-      console.error("Telegram error:", err);
-    }
-    const message = `Клієнт ${client.bill} | ${client.name} - ${
+    const message = `Клієнт ${client.bill}|${client.name} - ${
       client.adresId
     }: ${client.street}, ${client.home} ${
       data.isNoActive ? "деактивовано" : "активовано"
@@ -75,7 +64,7 @@ const ClientDetailPage = (params) => {
     setIsLoading(true);
     await editeClientById(id, data);
     await initData();
-    const message = `Клієнту ${client.bill} | ${client.name} - ${
+    const message = `Клієнту ${client.bill}|${client.name} - ${
       client.adresId
     }: ${client.street},${client.home} ${
       data.isUsilok ? "поставили усілок" : "зняли усілок"
