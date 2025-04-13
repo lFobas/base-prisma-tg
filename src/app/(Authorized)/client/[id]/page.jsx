@@ -41,6 +41,14 @@ const ClientDetailPage = (params) => {
     setIsLoading(true);
     await editeClientById(id, data);
     await initData();
+    const message = `Клієнт ${client.name} - ${client.adresId}:${
+      client.street
+    },${data.home} ${data.isNoActive ? "деактивовано" : "активовано"}.`;
+    try {
+      await sendTelegramMessage(message);
+    } catch (err) {
+      console.error("Telegram error:", err);
+    }
     toast.info("Змінено!", {
       autoClose: 1000,
       theme: "dark",
@@ -54,6 +62,14 @@ const ClientDetailPage = (params) => {
     setIsLoading(true);
     await editeClientById(id, data);
     await initData();
+    const message = `Клієнту ${client.name} - ${client.adresId}:${
+      client.street
+    },${data.home} ${data.isUsilok ? "поставили усілок" : "зняли усілок"}.`;
+    try {
+      await sendTelegramMessage(message);
+    } catch (err) {
+      console.error("Telegram error:", err);
+    }
     toast.info("Змінено!", {
       autoClose: 1000,
       theme: "dark",
