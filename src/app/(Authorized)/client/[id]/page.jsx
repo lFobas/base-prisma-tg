@@ -3,6 +3,7 @@ import RecordCard from "@/components/Card/RecordCard";
 import Spiner from "@/components/Spiner/Spiner";
 import { editeClientById, getClientById } from "@/lib/actions";
 import { sendTelegramMessage } from "@/lib/telegramBot";
+import { sendTelegramMessage } from "@/lib/telegramBot";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -51,6 +52,16 @@ const ClientDetailPage = (params) => {
     } catch (err) {
       console.error("Telegram error:", err);
     }
+    const message = `Клієнт ${client.bill} | ${client.name} - ${
+      client.adresId
+    }: ${client.street}, ${client.home} ${
+      data.isNoActive ? "деактивовано" : "активовано"
+    }.`;
+    try {
+      await sendTelegramMessage(message);
+    } catch (err) {
+      console.error("Telegram error:", err);
+    }
     toast.info("Змінено!", {
       autoClose: 1000,
       theme: "dark",
@@ -60,12 +71,17 @@ const ClientDetailPage = (params) => {
   };
 
   const handleChangeUsilok = async () => {
-    const data = { isNoActive: !client.isNoActive };
+    const data = { isUsilok: !client.isUsilok };
     setIsLoading(true);
     await editeClientById(id, data);
     await initData();
+    const message = `Клієнту ${client.bill} | ${client.name} - ${
+      client.adresId
+    }: ${client.street},${client.home} ${
+      data.isUsilok ? "поставили усілок" : "зняли усілок"
+    }.`;
     try {
-      await sendTelegramMessage(`Клієнту ${client.bill}|${client.name} - ${client.adresId}: ${client.street},${client.home} ${data.isUsilok ? "поставили усілок" : "зняли усілок"}.`);
+      await sendTelegramMessage(message);
     } catch (err) {
       console.error("Telegram error:", err);
     }
@@ -89,10 +105,7 @@ const ClientDetailPage = (params) => {
       <div className="px-3">
         <h1 className="pt-3 text-2xl">{client?.name}</h1>
         <div className="flex px-3 justify-end secondary-text">
-          {client?.adresId}
-          {' '}
-          {client?.street},
-          {client?.home}
+          {client?.adresId} {client?.street},{client?.home}
         </div>
       </div>
       {client ? (
