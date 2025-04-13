@@ -2,6 +2,7 @@
 import RecordCard from "@/components/Card/RecordCard";
 import Spiner from "@/components/Spiner/Spiner";
 import { editeClientById, getClientById } from "@/lib/actions";
+import { sendTelegramMessage } from "@/lib/telegramBot";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
