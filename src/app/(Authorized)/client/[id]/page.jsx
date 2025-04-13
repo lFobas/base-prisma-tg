@@ -41,9 +41,9 @@ const ClientDetailPage = (params) => {
     setIsLoading(true);
     await editeClientById(id, data);
     await initData();
-    const message = `Клієнт ${client.name} - ${client.adresId}:${
+    const message = `Клієнт ${client.bill}|${client.name} - ${client.adresId}: ${
       client.street
-    },${data.home} ${data.isNoActive ? "деактивовано" : "активовано"}.`;
+    }, ${client.home} ${data.isNoActive ? "деактивовано" : "активовано"}.`;
     try {
       await sendTelegramMessage(message);
     } catch (err) {
@@ -62,7 +62,7 @@ const ClientDetailPage = (params) => {
     setIsLoading(true);
     await editeClientById(id, data);
     await initData();
-    const message = `Клієнту ${client.name} - ${client.adresId}:${
+    const message = `Клієнту ${client.bill}|${client.name} - ${client.adresId}: ${
       client.street
     },${data.home} ${data.isUsilok ? "поставили усілок" : "зняли усілок"}.`;
     try {
