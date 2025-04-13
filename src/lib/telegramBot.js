@@ -1,6 +1,22 @@
+'use server'
+
 import { Telegraf, Markup } from "telegraf";
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
+
+
+export async function sendTelegramMessage(message) {
+  
+  const chatId = process.env.TELEGRAM_MY_ID;
+  
+  if (!chatId || !message) return;
+
+  try {
+    await bot.telegram.sendMessage(chatId, message);
+  } catch (err) {
+    console.error("Telegram error:", err);
+  }
+}
 
 // Обробка команди /start
 bot.start((ctx) => {

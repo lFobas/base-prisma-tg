@@ -40,22 +40,15 @@ const ClientDetailPage = (params) => {
     setIsLoading(true);
     await editeClientById(id, data);
     await initData();
-  
+    const message = `Клієнт ${data.name} - ${data.adresId}:${data.street},${
+      data.home
+    } ${data.isNoActive ? "деактивовано" : "активовано"}.`;
     try {
-      await fetch("/api/send-tg-message", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          chatId: 361762224, // твій Telegram ID
-          message: `Клієнта з ID ${id} ${data.isNoActive ? "деактивовано" : "активовано"}.`,
-        }),
-      });
+      await sendTelegramMessage(message);
     } catch (err) {
       console.error("Telegram error:", err);
     }
-  
+
     toast.info("Змінено!", {
       autoClose: 1000,
       theme: "dark",
@@ -63,7 +56,6 @@ const ClientDetailPage = (params) => {
     });
     setIsLoading(false);
   };
-  
 
   const handleChangeUsilok = async () => {
     const data = { isNoActive: !client.isNoActive };
@@ -90,10 +82,7 @@ const ClientDetailPage = (params) => {
       <div className="px-3">
         <h1 className="pt-3 text-2xl">{client?.name}</h1>
         <div className="flex px-3 justify-end secondary-text">
-          {client?.adresId}
-          {' '}
-          {client?.street},
-          {client?.home}
+          {client?.adresId} {client?.street},{client?.home}
         </div>
       </div>
       {client ? (
