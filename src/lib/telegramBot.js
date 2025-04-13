@@ -18,10 +18,13 @@ bot.help((ctx) => {
 
 // Обробка команди /getinfo
 bot.command("getinfo", (ctx) => {
-  const { id, first_name } = ctx.from;
-  const info = `Ваше ім'я: ${first_name}\nВаш ID: ${id}`;
+  const { id: userId, first_name } = ctx.from;
+  const chatId = ctx.chat.id;
+
+  const info = `Ваше ім'я: ${first_name}\nВаш User ID: ${userId}\nВаш Chat ID: ${chatId}`;
   ctx.reply(info);
 });
+
 
 // Обробка команди /app
 bot.command("app", (ctx) => {
