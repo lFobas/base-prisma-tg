@@ -171,16 +171,19 @@ export const createManyClients = async (data) => {
   }
 };
 
-export const getRecordsByDate = async (selectedDate: string) => {
+export const getRecordsByDate = async (selectedDateFrom: string, selectedDateTo: string) => {
   const records = await prisma.record.findMany({
     where: {
-      date: new Date(selectedDate),
+      date: {
+        gte: new Date(selectedDateFrom),
+        lte: new Date(selectedDateTo),
+      },
     },
   });
 
   const result = records.map((record) => ({
     ...record,
-    summa: Number(record.summa), // тепер це number, а не Prisma.Decimal
+    summa: (record.summa as any)?.toNumber?.() ?? Number(record.summa),
   }));
 
   return result;

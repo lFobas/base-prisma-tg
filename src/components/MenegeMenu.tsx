@@ -45,7 +45,7 @@ export default function MenegeMenu({ children }) {
             </li>
             <li className="mb-4">
               <Link
-                href={"/manage"}
+                href={"/manage/adreses"}
                 className="flex w-full p-1 button justify-end md:justify-start"
               >
                 <MapIcon className="h-5 w-5" />
@@ -69,6 +69,8 @@ export default function MenegeMenu({ children }) {
                 <ArrowUpTrayIcon className="h-5 w-5" />
                 <span className="ml-3 hidden md:block">Загрузка</span>
               </Link>
+            </li>
+            <li>
               <Link
                 href={"/v2"}
                 className="flex w-full p-1 button justify-end md:justify-start"
