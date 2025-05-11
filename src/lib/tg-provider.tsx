@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import {  useUserStore } from "./store";
+import { useUserStore } from "./store";
 import { tgUsersAnalitik } from "./actions";
 
 import Loader from "../components/Loader/Loader";
@@ -20,12 +20,11 @@ export default function Telegram({ children }: { children: React.ReactNode }) {
 
   const addUser = async (data: iUser) => {
     try {
-      const visitor = JSON.stringify(data);
-      const res = await tgUsersAnalitik(visitor);
+      const res = await tgUsersAnalitik(data);
       initUser(res);
 
       if (res.role === "GUEST") {
-        setIsAuthorized(false);
+        setIsAuthorized(true);
         setGuest(true);
       } else {
         setIsAuthorized(true);
@@ -56,7 +55,7 @@ export default function Telegram({ children }: { children: React.ReactNode }) {
         } else {
           setLoading(false);
           setIsAuthorized(false);
-
+          setGuest(true);
         }
       } else {
         setGuest(true);
@@ -75,13 +74,12 @@ export default function Telegram({ children }: { children: React.ReactNode }) {
   if (loading) {
     return <Loader />;
   }
+  if (!isAuthorized) {
+    return <Auth login={setIsAuthorized} block={setGuest} />;
+  }
 
   if (guest) {
     return <NotAuthorized />;
-  }
-
-  if (!isAuthorized) {
-    return <Auth login={setIsAuthorized} block={setGuest} />;
   }
 
   return <div>{children}</div>;

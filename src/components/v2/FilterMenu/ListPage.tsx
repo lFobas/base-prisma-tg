@@ -29,7 +29,7 @@ const ListPage = () => {
             item.isNoActive === checkedActive && item.isUsilok === checkedUsilok
         )
         .map((item) => (
-          <ClientListCard key={item.id} client={item} summa={item.records} />
+          <ClientListCard key={item.id} client={item} summa={item.recordsSuma} />
         ))}
       <button
         onClick={scrollToTopA}

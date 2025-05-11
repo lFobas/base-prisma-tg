@@ -139,7 +139,7 @@ const Table = ({ adr }) => {
         <div className="flex mt-1">
           <h2 className="text-end my-auto">{user?.name}</h2>
           {/* {user ? <img src={user.photo_url} className="w-10 h-10 mx-1 rounded-full border-2 shadow-lg border-blue-800" /> : null} */}
-          {user.role === "ADMIN" ? (
+          {user?.role === "ADMIN" ? (
             <Link className="px-2 py-1 rounded-sm my-bg" href="/manage">
               {" "}
               <Cog6ToothIcon className="h-5 w-5" />

@@ -7,6 +7,7 @@ declare global {
         initData: string;
         initDataUnsafe: {
           user?: {
+            role: string;
             id: number;
             first_name: string;
             last_name?: string;

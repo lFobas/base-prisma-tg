@@ -14,7 +14,18 @@ const Auth = ({ login, block }) => {
   const handleSubmit = async () => {
     try {
       const res = await getUser(telegramIdForm);
+      console.log("res auth", res);
+      
       initUser(res);
+      if(!res?.role) {
+        toast.error("Login failed", {
+          autoClose: 1000,
+          theme: "dark",
+          draggable: true,
+        });
+        login(false)
+        block(true);
+        return;}
       if (res?.role !== "GUEST") {
         toast.success("Авторизовано!", {
           autoClose: 1000,

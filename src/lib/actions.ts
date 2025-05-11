@@ -2,6 +2,7 @@
 import { clientsDto } from "./DTO/client";
 import { userDto } from "./DTO/userDto";
 import prisma from "./prisma";
+import { iUser } from "./types/user";
 
 export const editeClientById = async (id:string, body:any) => {
   try {
@@ -200,7 +201,7 @@ export const editeRecordById = async (id, body) => {
   }
 };
 
-export const tgUsersAnalitik = async (visitor) => {
+export const tgUsersAnalitik = async (visitor:iUser) => {
   try {
     const visitorData =
       typeof visitor === "string" ? JSON.parse(visitor) : visitor;
