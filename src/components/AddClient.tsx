@@ -23,12 +23,12 @@ import {
   DialogDescription,
   DialogFooter,
   DialogClose,
-} from "./ui/dialog";
+} from "@/components/ui/dialog";
 
-import { Input } from "./ui/input";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "./ui/select";
-import { Checkbox } from "./ui/checkbox";
-import { Button } from "./ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 
 import { getAdresiWithStreets } from "@/lib/adresAcrions";
 
