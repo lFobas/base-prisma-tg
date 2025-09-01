@@ -24,7 +24,7 @@ const UsersPage = () => {
   }, [setUsers]);
 
   return (
-    <div className="sm:w-1/2 mx-auto">
+    <div className="sm:w-2/3 mx-auto">
       <h1 className="font-semibold">Admins:</h1>
       {isLoading ? (
         <Spiner />

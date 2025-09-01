@@ -13,8 +13,10 @@ import Link from "next/link";
 export default function MenegeMenu({ children }) {
   return (
     <div className="flex h-screen">
-      <div className="w-10/12 p-2 justify-center">
-        <h2 className="text-2xl font-bold">Dashboard</h2>
+      <div className="w-10/12 justify-center">
+        <div className="flex shadow-md bg-gray-100 h-16 items-center">
+          <h2 className="text-2xl m-1 font-bold">Dashboard</h2>
+        </div>
         {children}
       </div>
       <div className="md:w-2/12 w-16 bg-gray-800 text-white h-full transition-all duration-300 ease-in-out flex flex-col fixed right-0 top-0">

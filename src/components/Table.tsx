@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import Link from "next/link";
+import {
+  Cog6ToothIcon,
+  ArrowLeftCircleIcon,
+} from "@heroicons/react/24/outline";
 import Spiner from "./Spiner/Spiner";
 import ClientListCard from "./Card/ClientListCard";
-import Link from "next/link";
-import { Cog6ToothIcon } from "@heroicons/react/24/outline";
-import { ArrowLeftCircleIcon } from "@heroicons/react/24/outline";
 import { useFilterStore, useUserStore } from "../lib/store";
 import { getClients, getClientsByAdres } from "../lib/actions";
 
@@ -29,228 +31,173 @@ const Table = ({ adr }) => {
     state.selectAdres,
     state.selectDataCl,
   ]);
+
   const [user, initUser] = useUserStore((state) => [
     state.user,
     state.initUser,
   ]);
-
+  const [isOpen, setIsOpen] = useState(false);
   const [displayClient, setDisplayClient] = useState(dataCl);
   const [isLoading, setIsLoading] = useState(false);
   const [baner, setBaner] = useState("");
-  const [count, setCount] = useState(0);
-  const [zagalno, setZagalno] = useState(0);
+
+  const [searchName, setSearchName] = useState("");
+  const [minBorg, setMinBorg] = useState("");
 
   useEffect(() => {
-    setIsLoading(true);
+    setDisplayClient(dataCl);
     setBaner("Виберіть Село");
-    setIsLoading(false);
-  }, []);
+  }, [dataCl]);
 
-  useEffect(() => {
-    if (displayClient.length > 0) {
-      const result = displayClient.filter(
-        (item) =>
-          item.isNoActive === checkedActive && item.isUsilok === checkedUsilok
-      );
-      setCount(result.length);
-      setZagalno(getTotal(result));
-    }
-  }, [displayClient, checkedActive, checkedUsilok]);
-
-  const getTotal = (items = []) => {
-    return items.reduce((acc, item) => {
-      return (acc += parseFloat(item.recordsSuma));
-    }, 0);
-  };
-
-  const adresChange = async (e:any) => {
-    setIsLoading(true);
-    setBaner(null);
+  const handleAdresChange = async (e) => {
     const newAdres = e.target.value;
     selectAdres(newAdres);
-    if (newAdres === "") {
-      setIsLoading(true);
-      const newData  = await getClients();
-      setDisplayClient(newData);
-      selectDataCl(newData);
-      setIsLoading(false);
-    } else {
-      const data = await getClientsByAdres(newAdres);
-      const filteredData = data.filter((c) => c.adres === newAdres);
-      selectDataCl(filteredData);
-      if (filteredData.length > 0) {
-        setDisplayClient(filteredData);
-      } else {
-        setDisplayClient(data);
-      }
-    }
+    setIsLoading(true);
+    setBaner("");
+
+    let clients = newAdres
+      ? await getClientsByAdres(newAdres)
+      : await getClients();
+    clients = clients || [];
+    selectDataCl(clients);
+    setDisplayClient(clients);
     setIsLoading(false);
   };
 
-  const searcChange = (e:any) => {
-    setBaner(null);
-    if (e.target.value) {
-      if (selectedAdres) {
-        const filte = dataCl.filter((c) =>
-          c.name.toLowerCase().includes(e.target.value.toLowerCase())
-        );
-        if (filte.length > 0) {
-          setDisplayClient(filte);
-        } else {
-          setDisplayClient([]);
-          setBaner("Нема збігів");
-        }
-      } else {
-        const filte = dataCl.filter((c) =>
-          c.name.toLowerCase().includes(e.target.value.toLowerCase())
-        );
-        setDisplayClient(filte);
-      }
-    } else {
-      setDisplayClient(dataCl);
-    }
-  };
+  // Уніфікована фільтрація
+  const filteredClients = useMemo(() => {
+    return displayClient
+      .filter(
+        (c) => c.isNoActive === checkedActive && c.isUsilok === checkedUsilok
+      )
+      .filter((c) =>
+        searchName
+          ? c.name.toLowerCase().includes(searchName.toLowerCase())
+          : true
+      )
+      .filter((c) => (minBorg ? c.recordsSuma <= -Number(minBorg) : true));
+  }, [displayClient, checkedActive, checkedUsilok, searchName, minBorg]);
 
-  const borgChange = (e) => {
-    if (e.target.value) {
-      if (selectedAdres) {
-        const filteredData = dataCl.filter((c) => c.recordsSuma <= -e.target.value);
-        if (filteredData.length > 0) {
-          setDisplayClient(filteredData);
-        } else {
-          setDisplayClient([]);
-        }
-      } else {
-        const filteredData = dataCl.filter((c) => c.recordsSuma <= -e.target.value);
-        setDisplayClient(filteredData);
-      }
-    } else {
-      if (selectedAdres) {
-        setDisplayClient(dataCl);
-      }
-    }
-  };
+  const totalBorg = useMemo(
+    () => filteredClients.reduce((acc, c) => acc + c.recordsSuma, 0),
+    [filteredClients]
+  );
+
   return (
     <div className="w-full">
-      <div className="flex justify-between">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-3">
         <h1 className="text-2xl font-bold">
-          <Link href={"/borg"}>Борги</Link>
+          <Link href="/borg">Борги</Link>
         </h1>
-        <div className="flex mt-1">
-          <h2 className="text-end my-auto">{user?.name}</h2>
-          {/* {user ? <img src={user.photo_url} className="w-10 h-10 mx-1 rounded-full border-2 shadow-lg border-blue-800" /> : null} */}
+        <div className="flex items-center gap-2">
+          {user && <span>{user.name}</span>}
           {user?.role === "ADMIN" ? (
-            <Link className="px-2 py-1 rounded-sm my-bg" href="/manage">
-              {" "}
+            <Link href="/manage" className="px-2 py-1 rounded-sm my-bg">
               <Cog6ToothIcon className="h-5 w-5" />
             </Link>
           ) : (
-            <Link
-              href="/"
+            <button
               className="px-2 py-1 rounded-sm my-bg"
               onClick={() => initUser(null)}
             >
               <ArrowLeftCircleIcon className="h-5 w-5" />
-            </Link>
+            </button>
           )}
         </div>
       </div>
-      <div className="flex gap-3">
-        <div className="flex flex-col w-1/2">
-          <label className="mx-2 secondary-text">Населений пункт:</label>
+
+      {/* Фільтри */}
+      <div className="flex justify-between gap-3 mb-1">
+        <div className="flex flex-col">
+          <label className="secondary-text mb-1">Населений пункт:</label>
           <select
-            name="adres"
-            defaultValue={selectedAdres}
-            onChange={adresChange}
-            className="flex  mb-2 border border-gray-300 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 w-full p-2.5"
+            className="border border-gray-300 rounded-lg p-2"
+            value={selectedAdres || ""}
+            onChange={handleAdresChange}
           >
             <option value="">Всі Села</option>
             {adr.map((a) => (
-              <option key={a.name} value={a?.name}>
-                {a?.name}
+              <option key={a.name} value={a.name}>
+                {a.name}
               </option>
             ))}
           </select>
         </div>
-        <h1 className="flex flex-col w-1/2">
-          <label className="mx-2 secondary-text">Загальний Борг:</label>
-          <p className="flex  mb-2 border border-gray-300  rounded-lg justify-end w-full p-2.5">
-            {displayClient.length > 0 ? zagalno : "0"}грн.
-          </p>
-        </h1>
-      </div>
-      <label className="mx-2 secondary-text">Пошук по імені абонента:</label>
-      <input
-        type="text"
-        defaultValue={""}
-        onChange={searcChange}
-        name="search"
-        className="mb-2 border border-gray-300  text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-        placeholder="Знайти по імені"
-      />
-      <div className="flex justify-between text-center ">
-        <div className="flex w-2/3">
-          <input
-            type="checkbox"
-            checked={checkedActive}
-            onChange={() => changeActive()}
-            className="my-auto w-5 h-5 p-2.5 text-blue-600 transition duration-150 ease-in-out"
-          />
-          <label className="mx-2 my-auto secondary-text">Закриті</label>
-          <input
-            type="checkbox"
-            checked={checkedUsilok}
-            onChange={() => changeUsilok()}
-            className="my-auto w-5 h-5 p-2.5 text-blue-600 transition duration-150 ease-in-out"
-          />
-          <label className="flex mx-2 my-auto secondary-text justify-center">
-            Підсилювачі
-          </label>
+        <div className="flex flex-col">
+          <label className="secondary-text mb-1">Загальний Борг:</label>
+          <div className="border border-gray-300 rounded-lg p-2 text-right">
+            {filteredClients.length ? totalBorg : 0} грн.
+          </div>
         </div>
-        <input
-          type="text"
-          defaultValue={""}
-          onChange={borgChange}
-          name="search"
-          className="border border-gray-300  text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/3 p-2.5"
-          style={{
-            backgroundColor: "var(--input-bg-color)",
-            color: "var(--input-text-color)",
-          }}
-          placeholder="Борг Більше"
-        />
       </div>
-      {count ? (
-        <div className="flex justify-end text-xs mt-1 secondary-text">
-          Загалом: <p className="font-bold">{count}</p>
-        </div>
-      ) : (
-        <></>
-      )}
-      {!isLoading ? (
-        displayClient.length > 0 ? (
-          displayClient
-            .filter(
-              (item) =>
-                item.isNoActive === checkedActive &&
-                item.isUsilok === checkedUsilok
-            )
-            .map((item) => (
-              <ClientListCard
-                key={item.id}
-                client={item}
-                summa={item.recordsSuma}
+      {/* Пошук та інші фільтри */}
+      <div className="flex justify-between items-center mb-3">
+        <div className="flex w-full items-center justify-between gap-4 border-b border-t border-teal-600 py-1">
+          {isOpen ? (
+            <input
+              type="text"
+              autoFocus
+              placeholder="Пошук по імені"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+              onBlur={() => setIsOpen(false)} // закривається при втраті фокусу
+              className="flex w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400"
+            />
+          ) : (
+            <div className="flex sm:justify-start justify-between w-full items-center gap-3">
+              <button
+                onClick={() => setIsOpen(true)}
+                className="border border-gray-300 rounded-lg p-2 bg-gray-100 hover:bg-gray-200"
+              >
+                🔍
+              </button>
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={checkedActive}
+                  onChange={changeActive}
+                  className="w-5 h-5"
+                />
+                Закриті
+              </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={checkedUsilok}
+                  onChange={changeUsilok}
+                  className="w-5 h-5"
+                />
+                Усілок
+              </label>
+              <input
+                type="number"
+                placeholder="Борг більше"
+                className="border border-gray-300 rounded-lg p-2 w-32"
+                value={minBorg}
+                onChange={(e) => setMinBorg(e.target.value)}
               />
-            ))
-        ) : (
-          <h1>{baner}</h1>
-        )
-      ) : (
-        <Spiner />
-      )}
-      <div className="m-9">
-        <br />
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Клієнти */}
+      {isLoading ? (
+        <Spiner />
+      ) : filteredClients.length ? (
+        filteredClients.map((item) => (
+          <ClientListCard
+            key={item.id}
+            client={item}
+            summa={item.recordsSuma}
+          />
+        ))
+      ) : (
+        <h1 className="text-center">{baner || "Немає збігів"}</h1>
+      )}
+
+      <div className="my-9"></div>
     </div>
   );
 };

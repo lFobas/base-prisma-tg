@@ -3,7 +3,7 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ScrollToTopButton from "../components/UI/ScrollToTopButton";
+import ScrollToTopButton from "../components/ui/ScrollToTopButton";
 import Telegram from "../lib/tg-provider";
 
 
@@ -18,10 +18,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ToastContainer />
-        <ScrollToTopButton />
-        <Telegram>{children}</Telegram>
-        <Analytics />
+          <ToastContainer />
+          <ScrollToTopButton />
+          <Telegram>{children}</Telegram>
+          <Analytics />
       </body>
     </html>
   );

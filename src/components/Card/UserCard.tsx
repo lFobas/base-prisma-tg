@@ -39,26 +39,32 @@ const UserCard = ({ user }) => {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row sm:justify-between  lg:space-x-4 p-2 border-2 rounded-lg m-1 border-teal-600">
-      <div className="flex justify-between items-center">
-        <div className="md:flex">
-          <h2 className="font-bold ml-1">{user?.telegramId}</h2>
-          <h2 className="font-semibold ml-1">{user?.name}</h2>
-        </div>
+    <div className="flex flex-col sm:flex-row sm:justify-between gap-3 p-3 border-2 rounded-lg m-2 border-teal-600 bg-white shadow-sm">
+      {/* Інформація про користувача */}
+      <div className="flex flex-col  gap-2">
+        <h2 className="font-medium text-sm text-gray-800">
+          {user?.telegramId}
+        </h2>
+        <h2 className="font-bold text-gray-700">{user?.name}</h2>
       </div>
-      <div className="flex content-center justify-end">
+
+      {/* Роль і кнопка збереження */}
+      <div className="flex flex-col md:flex-row md:items-center gap-2">
         <select
           name="role"
           value={userData?.role}
           onChange={handleChange}
-          className="border border-gray-300 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2.5"
+          className="border border-gray-300 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 p-2 min-w-[120px]"
         >
           <option value="ADMIN">ADMIN</option>
           <option value="USER">USER</option>
           <option value="GUEST">GUEST</option>
         </select>
-        <button className="mx-1" onClick={changeUser}>
-          Save
+        <button
+          onClick={changeUser}
+          className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition"
+        >
+          Зберегти
         </button>
       </div>
     </div>

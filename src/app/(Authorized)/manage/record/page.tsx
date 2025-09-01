@@ -5,26 +5,36 @@ import { toast } from "react-toastify";
 import { getRecordsByDate } from "../../../../lib/actions";
 import Spiner from "../../../../components/Spiner/Spiner";
 import RecordCard from "../../../../components/Card/RecordCard";
+import { Button } from "@/components/ui/button"; // ✅ shadcn button
+
+const DateInput = ({ value, onChange, min, max }) => (
+  <input
+    type="date"
+    value={value}
+    onChange={onChange}
+    min={min}
+    max={max}
+    className="border rounded-md px-2 py-1 min-w-[140px] focus:outline-none focus:ring-2 focus:ring-teal-400"
+  />
+);
 
 const RecordsPage = () => {
-  const [records, setRecords] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-
   const getToday = () => new Date().toISOString().split("T")[0];
 
+  const [records, setRecords] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedDateFrom, setSelectedDateFrom] = useState(getToday);
   const [selectedDateTo, setSelectedDateTo] = useState(getToday);
 
-  const handleChangeDateFrom = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeDateFrom = (e) => {
     const newFrom = e.target.value;
     setSelectedDateFrom(newFrom);
-
     if (newFrom > selectedDateTo) {
-      setSelectedDateTo(newFrom); // Автоматично підтягує другу дату, якщо менша
+      setSelectedDateTo(newFrom);
     }
   };
 
-  const handleChangeDateTo = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeDateTo = (e) => {
     const newTo = e.target.value;
     if (newTo >= selectedDateFrom) {
       setSelectedDateTo(newTo);
@@ -38,18 +48,17 @@ const RecordsPage = () => {
 
   const handleLoadRecords = async () => {
     setIsLoading(true);
-    const rec = await getRecordsByDate(selectedDateFrom, selectedDateTo);
-    setIsLoading(false);
-
-    if (rec.length > 0) {
+    try {
+      const rec = await getRecordsByDate(selectedDateFrom, selectedDateTo);
       setRecords(rec);
-    } else {
-      setRecords([]);
-      toast.info("Не знайдено виписок :(", {
-        autoClose: 1000,
-        theme: "dark",
-        draggable: true,
-      });
+      if (!rec.length) {
+        toast.info("Не знайдено виписок :(", { autoClose: 1200, theme: "dark" });
+      }
+    } catch (err) {
+      toast.error("Помилка при завантаженні записів", { autoClose: 1500 });
+      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -61,52 +70,39 @@ const RecordsPage = () => {
   };
 
   return (
-    <div className="p-1">
-      <div className="w-full flex flex-wrap gap-2 items-center mb-2">
-        <input
-          type="date"
+    <div className="p-2">
+      <div className="w-full flex flex-wrap gap-2 items-center mb-3">
+        <DateInput
           value={selectedDateFrom}
           onChange={handleChangeDateFrom}
-          className="border rounded-md px-2 py-1 min-w-[140px]"
-          max={selectedDateTo}
-        />
-
-        <input
-          type="date"
+          max={selectedDateTo} min={undefined}        />
+        <DateInput
           value={selectedDateTo}
           onChange={handleChangeDateTo}
-          className="border rounded-md px-2 py-1 min-w-[140px]"
-          min={selectedDateFrom}
-        />
+          min={selectedDateFrom} max={undefined}        />
 
-        <button
+        <Button
           onClick={handleLoadRecords}
-          className="bg-teal-500 text-white px-4 py-1 rounded-md border border-teal-800"
+          disabled={isLoading}
+          variant="default"
         >
-          Загрузити
-        </button>
-        <button
-          onClick={handleClear}
-          className="bg-red-600 text-white px-3 py-1 rounded-md border border-red-800"
-        >
+          {isLoading ? <Spiner /> : "Завантажити"}
+        </Button>
+
+        <Button onClick={handleClear} variant="destructive">
           Очистити
-        </button>
-        {isLoading && (
-          <div className="flex justify-center items-center">
-            <Spiner />
-          </div>
-        )}
+        </Button>
       </div>
 
       {records.length > 0 ? (
-        <div className="flex border border-teal-800 rounded-xl flex-col gap-4 p-2 overflow-y-auto max-h-[85vh]">
+        <div className="flex border border-teal-800 rounded-xl flex-col gap-4 p-2 overflow-y-auto overflow-x-hidden max-h-[85vh]">
           {records.map((r) => (
             <RecordCard key={r.id} record={r} changeable={true} />
           ))}
         </div>
       ) : (
-        <p className="text-center text-gray-500 mt-4">
-          Немає записів для відображення
+        <p className="text-center text-gray-500 mt-6 text-lg">
+          📭 Немає записів для відображення
         </p>
       )}
     </div>

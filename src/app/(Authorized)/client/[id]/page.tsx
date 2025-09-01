@@ -1,148 +1,142 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
-import { editeClientById, getClientById } from "../../../../lib/actions";
-import { sendTelegramMessage } from "../../../../lib/telegramBot";
-import Spiner from "../../../../components/Spiner/Spiner";
-import RecordCard from "../../../../components/Card/RecordCard";
+import { editeClientById, getClientById } from "@/lib/actions";
+import { sendTelegramMessage } from "@/lib/telegramBot";
+import Spiner from "@/components/Spiner/Spiner";
+import RecordCard from "@/components/Card/RecordCard";
 
-const ClientDetailPage = (params) => {
-  const id = params.params.id;
+const ClientDetailPage = ({ params }: { params: { id: string } }) => {
+  const id = params.id;
   const [isLoading, setIsLoading] = useState(false);
-  const [client, setClient] = useState(null);
-  const [records, setRecords] = useState([]);
+  const [client, setClient] = useState<any>(null);
+  const [records, setRecords] = useState<any[]>([]);
+
+  const initData = useCallback(async () => {
+    try {
+      const res = await getClientById(id);
+      setClient(res);
+      setRecords(
+        res?.records
+          ?.slice()
+          .sort(
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+          ) || []
+      );
+    } catch (err) {
+      console.error("Помилка завантаження клієнта:", err);
+    }
+  }, [id]);
 
   useEffect(() => {
     initData();
-  }, []);
+  }, [initData]);
 
-  const initData = async () => {
-    const res = await getClientById(id);
-    console.log(res);
-    setClient(res);
-    setRecords(
-      res?.records?.sort((a, b) => {
-        const recordA = a.date;
-        const recordB = b.date;
-
-        if (recordA < recordB) {
-          return 1;
-        }
-        if (recordA > recordB) {
-          return -1;
-        }
-      })
-    );
-  };
-
-  const handleCloseOpen = async () => {
-    const data = { isNoActive: !client.isNoActive };
+  const toggleClientField = async (
+    field: "isNoActive" | "isUsilok",
+    messages: [string, string]
+  ) => {
+    if (!client) return;
+    const newValue = !client[field];
     setIsLoading(true);
-    await editeClientById(id, data);
-    await initData();
-    const message = `Клієнт ${client.bill}|${client.name} - ${
-      client.adresId
-    }: ${client.street}, ${client.home} ${
-      data.isNoActive ? "деактивовано" : "активовано"
-    }.`;
+
     try {
+      await editeClientById(id, { [field]: newValue });
+      await initData();
+
+      const message =
+        field === "isNoActive"
+          ? `Клієнт ${client.bill}|${client.name} - ${client.adresId}: ${
+              client.street
+            }, ${client.home} ${newValue ? "деактивовано" : "активовано"}.`
+          : `Клієнту ${client.bill}|${client.name} - ${client.adresId}: ${
+              client.street
+            }, ${client.home} ${newValue ? messages[0] : messages[1]}.`;
+
       await sendTelegramMessage(message);
+
+      toast.info("Змінено!", {
+        autoClose: 1000,
+        theme: "dark",
+        draggable: true,
+      });
     } catch (err) {
-      console.error("Telegram error:", err);
+      console.error(err);
+      toast.error("Помилка!", { autoClose: 1500, theme: "dark" });
+    } finally {
+      setIsLoading(false);
     }
-    toast.info("Змінено!", {
-      autoClose: 1000,
-      theme: "dark",
-      draggable: true,
-    });
-    setIsLoading(false);
   };
 
-  const handleChangeUsilok = async () => {
-    const data = { isUsilok: !client.isUsilok };
-    setIsLoading(true);
-    await editeClientById(id, data);
-    await initData();
-    const message = `Клієнту ${client.bill}|${client.name} - ${
-      client.adresId
-    }: ${client.street},${client.home} ${
-      data.isUsilok ? "поставили усілок" : "зняли усілок"
-    }.`;
-    try {
-      await sendTelegramMessage(message);
-    } catch (err) {
-      console.error("Telegram error:", err);
-    }
-    toast.info("Змінено!", {
-      autoClose: 1000,
-      theme: "dark",
-      draggable: true,
-    });
-    setIsLoading(false);
-  };
+  if (!client) return <Spiner />;
 
   return (
-    <div className="py-4">
+    <div className="py-4 px-3">
       <Link
-        className="text-2xl text-lime-500 border-lime-500 p-2 border-2 m-2 rounded-md"
-        href={"/borg"}
+        href="/borg"
+        className="text-2xl text-lime-500 border-lime-500 p-2 border-2 rounded-md inline-block mb-4"
       >
-        {" "}
         ⇐ Назад До Списку
       </Link>
-      <div className="px-3">
-        <h1 className="pt-3 text-2xl">{client?.name}</h1>
-        <div className="flex px-3 justify-end secondary-text">
-          {client?.adresId} {client?.street},{client?.home}
-        </div>
+
+      <h1 className="text-2xl mb-1">{client.name}</h1>
+      <div className="flex justify-end text-gray-400 mb-4">
+        {[client.adresId, client.street, client.home]
+          .filter(Boolean)
+          .join(", ")}
       </div>
-      {client ? (
-        <div className="flex justify-between">
-          <button
-            className={`p-2 m-2 flex justify-center items-center rounded-md  h-10 ${
-              isLoading
-                ? "bg-yellow-300"
-                : !client?.isNoActive
-                ? "bg-red-600"
-                : "bg-green-600"
-            }`}
-            onClick={handleCloseOpen}
-          >
-            {isLoading ? (
-              <Spiner />
-            ) : !client?.isNoActive ? (
-              "Відключити Клієнта"
-            ) : (
-              "Поновити Клієнта"
-            )}
-          </button>
-          <button
-            className={`p-2 m-2 flex justify-center items-center rounded-md  h-10 ${
-              isLoading
-                ? "bg-yellow-300"
-                : !client?.isUsilok
-                ? "bg-green-600"
-                : "bg-red-600"
-            }`}
-            onClick={handleChangeUsilok}
-          >
-            {isLoading ? (
-              <Spiner />
-            ) : !client?.isUsilok ? (
-              "Поставити Усілок"
-            ) : (
-              "Забрати Усілок"
-            )}
-          </button>
-        </div>
-      ) : (
-        <></>
-      )}
-      {records?.map((r, idx) => {
-        return <RecordCard key={idx} record={r} changeable={false} />;
-      })}
+
+      <div className="flex flex-wrap gap-2 mb-6">
+        <button
+          className={`flex justify-center items-center p-2 rounded-md h-10 ${
+            isLoading
+              ? "bg-yellow-300"
+              : !client.isNoActive
+              ? "bg-red-600"
+              : "bg-green-600"
+          }`}
+          onClick={() => toggleClientField("isNoActive", ["", ""])}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <Spiner />
+          ) : !client.isNoActive ? (
+            "Відключити Клієнта"
+          ) : (
+            "Поновити Клієнта"
+          )}
+        </button>
+
+        <button
+          className={`flex justify-center items-center p-2 rounded-md h-10 ${
+            isLoading
+              ? "bg-yellow-300"
+              : !client.isUsilok
+              ? "bg-green-600"
+              : "bg-red-600"
+          }`}
+          onClick={() =>
+            toggleClientField("isUsilok", ["поставили усілок", "зняли усілок"])
+          }
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <Spiner />
+          ) : !client.isUsilok ? (
+            "Поставити Усілок"
+          ) : (
+            "Забрати Усілок"
+          )}
+        </button>
+      </div>
+
+      <div className="grid gap-4">
+        {records.map((r, idx) => (
+          <RecordCard key={idx} record={r} changeable={false} />
+        ))}
+      </div>
     </div>
   );
 };

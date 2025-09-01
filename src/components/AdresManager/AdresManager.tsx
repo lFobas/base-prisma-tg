@@ -3,9 +3,6 @@
 import React, { useEffect, useState } from "react";
 import {
   addAdres,
-  addStreet,
-  deleteAdres,
-  deleteStreet,
   getAdresiWithStreets,
 } from "../../lib/adresAcrions";
 import AdresCard from "./AdresCard";
