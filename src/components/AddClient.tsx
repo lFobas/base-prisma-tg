@@ -78,7 +78,7 @@ const AddClient = () => {
         <Button variant="default">Новий клієнт</Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-lg w-full">
+      <DialogContent className="sm:max-w-lg w-full bg-[var(--tg-theme-bg-color)]">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(data => console.log(data))}
