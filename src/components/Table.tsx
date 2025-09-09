@@ -112,7 +112,7 @@ const Table = ({ adr }) => {
         <div className="flex flex-col">
           <label className="secondary-text mb-1">Населений пункт:</label>
           <select
-            className="border border-gray-300 rounded-lg p-2"
+            className="border border-gray-300 bg-[var(--tg-theme-secondary-bg-color)] rounded-lg p-2"
             value={selectedAdres || ""}
             onChange={handleAdresChange}
           >
