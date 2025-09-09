@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { editeRecordById } from "../../lib/actions";
 
 const inputBase =
-  "border h-9 rounded-md p-1 flex-1 transition-colors focus:ring-2 focus:outline-none disabled:bg-gray-100";
+  "border h-9 rounded-md p-1 flex-1 transition-colors focus:ring-2 focus:outline-none";
 
 const RecordCard = ({ record, changeable }) => {
   const [edited, setEdited] = useState(record);
@@ -42,8 +42,8 @@ const RecordCard = ({ record, changeable }) => {
       className={`p-2 rounded-lg border-2 flex flex-wrap gap-2 transition-all duration-200
         ${
           edited.summa < 0
-            ? "border-rose-600 bg-red-100"
-            : "border-teal-600 bg-green-100"
+            ? "border-rose-600 "
+            : "border-teal-600 "
         }`}
     >
       <input
