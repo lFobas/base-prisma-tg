@@ -4,6 +4,8 @@ import prisma from "@/lib/prisma";
 export async function POST(request: Request) {
   try {
     const { searchName } = await request.json();
+    console.log("Received searchName:", searchName);
+    
     if (!searchName) {
       return NextResponse.json({ error: "не вказано імя" }, { status: 400 });
     }
